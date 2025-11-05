@@ -147,23 +147,14 @@ export class ChatSimulator {
     async generateRandomMessage() {
         if (!this.apiKey) return;
         
-        // Clear old conversation history periodically to avoid topic loops
-        if (this.conversationHistory.length > 3) {
-            // Remove oldest message to keep things fresh
-            this.conversationHistory.shift();
-        }
-        
         // Decide what type of message to generate
         const messageType = Math.random();
         
-        if (messageType < 0.6) {
-            // 60% chance: Ask streamer a question (main focus on streamer)
+        if (messageType < 0.7) {
+            // 70% chance: Ask streamer a question (main focus on streamer)
             this.generateStreamerQuestion();
-        } else if (messageType < 0.75 && this.conversationHistory.length > 1) {
-            // 15% chance: Chatter reacts to another chatter (reduced from 30%)
-            this.generateChatterToChatterMessage();
         } else {
-            // 25% chance: Random observation/comment
+            // 30% chance: Random observation/comment
             const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
             const prompt = this.buildRandomMessagePrompt(chatter);
             this.queueAPICall(prompt, chatter);
