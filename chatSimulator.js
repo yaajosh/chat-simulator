@@ -22,33 +22,33 @@ export class ChatSimulator {
     
     generateChatters() {
         const germanChatters = [
-            { name: 'MaxMustermann', personality: 'helpful', traits: 'asks thoughtful questions' },
-            { name: 'LunaGaming', personality: 'enthusiastic', traits: 'very supportive and positive' },
-            { name: 'TechNinja92', personality: 'technical', traits: 'knows a lot about tech' },
-            { name: 'StreamFan_DE', personality: 'curious', traits: 'always interested in learning' },
-            { name: 'GamerGirl_23', personality: 'funny', traits: 'makes jokes and uses emotes' },
-            { name: 'ProPlayer_X', personality: 'competitive', traits: 'gives tips and advice' },
-            { name: 'ChatMaster', personality: 'talkative', traits: 'likes to chat with others' },
-            { name: 'NiceVibes', personality: 'supportive', traits: 'always encouraging' },
-            { name: 'PixelKing', personality: 'creative', traits: 'shares ideas and suggestions' },
-            { name: 'RetroGamer', personality: 'nostalgic', traits: 'references old things' },
-            { name: 'ZockerPro', personality: 'critical', traits: 'asks challenging questions' },
-            { name: 'KaffeeJunkie', personality: 'casual', traits: 'relaxed and chill' }
+            { name: 'MaxMustermann', personality: 'casual', traits: 'chill and friendly' },
+            { name: 'LunaGaming', personality: 'casual', traits: 'supportive and laid-back' },
+            { name: 'TechNinja92', personality: 'casual', traits: 'knows tech but keeps it simple' },
+            { name: 'StreamFan_DE', personality: 'casual', traits: 'curious but relaxed' },
+            { name: 'GamerGirl_23', personality: 'casual', traits: 'funny and uses emotes' },
+            { name: 'ProPlayer_X', personality: 'casual', traits: 'helpful without being pushy' },
+            { name: 'ChatMaster', personality: 'casual', traits: 'likes to chat casually' },
+            { name: 'NiceVibes', personality: 'casual', traits: 'chill and encouraging' },
+            { name: 'PixelKing', personality: 'casual', traits: 'creative but relaxed' },
+            { name: 'RetroGamer', personality: 'casual', traits: 'nostalgic and chill' },
+            { name: 'ZockerPro', personality: 'casual', traits: 'asks questions casually' },
+            { name: 'KaffeeJunkie', personality: 'casual', traits: 'super relaxed and chill' }
         ];
         
         const englishChatters = [
-            { name: 'CoolGamer123', personality: 'enthusiastic', traits: 'very excited about everything' },
-            { name: 'StreamLover', personality: 'supportive', traits: 'loves the content' },
-            { name: 'TechWizard', personality: 'technical', traits: 'expert in technology' },
-            { name: 'PixelPro', personality: 'creative', traits: 'artistic and imaginative' },
-            { name: 'ChatKing', personality: 'talkative', traits: 'engages with everyone' },
-            { name: 'NightOwl', personality: 'curious', traits: 'asks deep questions' },
-            { name: 'ProViewer', personality: 'helpful', traits: 'gives good advice' },
-            { name: 'GamingFan', personality: 'funny', traits: 'makes everyone laugh' },
-            { name: 'RetroStyle', personality: 'nostalgic', traits: 'loves old school' },
-            { name: 'ModernGamer', personality: 'competitive', traits: 'always up to date' },
-            { name: 'StreamSniper', personality: 'critical', traits: 'questions everything' },
-            { name: 'ViewerOne', personality: 'casual', traits: 'just here to chill' }
+            { name: 'CoolGamer123', personality: 'casual', traits: 'excited but chill' },
+            { name: 'StreamLover', personality: 'casual', traits: 'supportive and relaxed' },
+            { name: 'TechWizard', personality: 'casual', traits: 'techy but not nerdy' },
+            { name: 'PixelPro', personality: 'casual', traits: 'creative and laid-back' },
+            { name: 'ChatKing', personality: 'casual', traits: 'friendly and talkative' },
+            { name: 'NightOwl', personality: 'casual', traits: 'curious in a chill way' },
+            { name: 'ProViewer', personality: 'casual', traits: 'helpful but relaxed' },
+            { name: 'GamingFan', personality: 'casual', traits: 'funny and easy-going' },
+            { name: 'RetroStyle', personality: 'casual', traits: 'nostalgic and chill' },
+            { name: 'ModernGamer', personality: 'casual', traits: 'up to date but casual' },
+            { name: 'StreamSniper', personality: 'casual', traits: 'asks questions casually' },
+            { name: 'ViewerOne', personality: 'casual', traits: 'just here to hang out' }
         ];
         
         const chatters = this.language === 'de' ? germanChatters : englishChatters;
@@ -229,38 +229,31 @@ export class ChatSimulator {
     }
     
     buildRandomMessagePrompt(chatter) {
-        const context = this.conversationHistory.slice(-5).join('\n');
+        // Only use last 2 messages for recency
+        const context = this.conversationHistory.slice(-2).join('\n');
         
         const prompts = {
-            de: `Du bist ${chatter.username}, ein Twitch-Chat-Nutzer.
-Persönlichkeit: ${chatter.personality}
-Charakter: ${chatter.traits}
+            de: `Du bist ${chatter.username}, ein casual Twitch-Chatter (${chatter.traits}).
 
-Generiere eine kurze, authentische Chat-Nachricht (max. 100 Zeichen).
+${context ? `Letzte Nachrichten:\n${context}\n` : ''}
 
-${context ? `Chat-Verlauf:\n${context}\n` : 'Der Chat hat gerade erst begonnen.'}
+Schreibe eine kurze, lockere Chat-Nachricht (max. 80 Zeichen).
+Reagiere am besten auf die LETZTE Nachricht oder das aktuelle Thema.
 
-Regeln:
-- Schreibe nur die Chat-Nachricht, keine Erklärungen
-- Verwende gelegentlich Emotes: PogChamp, Kappa, LUL, ResidentSleeper
-- Sei deinem Charakter treu (${chatter.personality})
-- Maximal 1-2 Sätze
+Sei casual und entspannt, wie ein echter Twitch-Zuschauer.
+Verwende manchmal Emotes: PogChamp, Kappa, LUL
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a Twitch chat user.
-Personality: ${chatter.personality}
-Character: ${chatter.traits}
+            en: `You are ${chatter.username}, a casual Twitch chatter (${chatter.traits}).
 
-Generate a short, authentic chat message (max 100 characters).
+${context ? `Recent messages:\n${context}\n` : ''}
 
-${context ? `Chat history:\n${context}\n` : 'Chat just started.'}
+Write a short, casual chat message (max 80 characters).
+React to the LAST message or current topic.
 
-Rules:
-- Write only the chat message, no explanations
-- Occasionally use emotes: PogChamp, Kappa, LUL, ResidentSleeper
-- Stay true to your character (${chatter.personality})
-- Max 1-2 sentences
+Be casual and relaxed, like a real Twitch viewer.
+Sometimes use emotes: PogChamp, Kappa, LUL
 
 Message:`
         };
@@ -269,38 +262,31 @@ Message:`
     }
     
     buildChatterInteractionPrompt(chatter, recentMessages) {
-        const context = recentMessages.join('\n');
+        // Only use the LAST message for interaction
+        const lastMessage = recentMessages[recentMessages.length - 1];
         
         const prompts = {
-            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            de: `Du bist ${chatter.username}, ein entspannter Twitch-Chatter.
 
-Neueste Chat-Nachrichten:
-${context}
+Letzte Nachricht im Chat:
+${lastMessage}
 
-Reagiere auf eine dieser Nachrichten oder starte eine Diskussion mit einem anderen Chatter.
-Verwende @username um jemanden direkt anzusprechen.
+Reagiere casual auf diese Nachricht. Verwende @username wenn du willst.
 
-Beispiele:
-- "@MaxMustermann das stimmt, ich denke auch..."
-- "@LunaGaming hast du das schon ausprobiert?"
-- "Ich bin bei @TechNinja92, das ist eine gute Idee"
+Sei locker und entspannt, kurz halten (max. 80 Zeichen).
 
-Schreibe NUR die Chat-Nachricht (max. 100 Zeichen):`,
+Nachricht:`,
             
-            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            en: `You are ${chatter.username}, a relaxed Twitch chatter.
 
-Recent chat messages:
-${context}
+Last message in chat:
+${lastMessage}
 
-React to one of these messages or start a discussion with another chatter.
-Use @username to address someone directly.
+React casually to this message. Use @username if you want.
 
-Examples:
-- "@MaxMustermann I agree, I think..."
-- "@LunaGaming have you tried that?"
-- "I'm with @TechNinja92, that's a good idea"
+Be chill and relaxed, keep it short (max 80 characters).
 
-Write ONLY the chat message (max 100 characters):`
+Message:`
         };
         
         return prompts[this.language];
@@ -308,31 +294,33 @@ Write ONLY the chat message (max 100 characters):`
     
     buildStreamerQuestionPrompt(chatter) {
         const prompts = {
-            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            de: `Du bist ${chatter.username}, ein casual Twitch-Chatter.
 
-Du möchtest den Streamer etwas fragen.
-Die Frage sollte zu deiner Persönlichkeit passen.
+Stelle dem Streamer eine lockere, kurze Frage (max. 80 Zeichen).
 
-Beispiele je nach Persönlichkeit:
-- Technical: "Welche Software benutzt du dafür?"
-- Curious: "Wie lange machst du das schon?"
-- Supportive: "Können wir irgendwie helfen?"
-- Funny: "Hast du schon mal XY versucht? Kappa"
+Sei entspannt und freundlich, wie ein normaler Zuschauer.
 
-Schreibe NUR die Frage an den Streamer (max. 100 Zeichen):`,
+Beispiele:
+- "Was machst du da gerade?"
+- "Wie läuft's so?"
+- "Hast du XY schon probiert?"
+- "Cool! Wie machst du das?"
+
+Nachricht:`,
             
-            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            en: `You are ${chatter.username}, a casual Twitch chatter.
 
-You want to ask the streamer a question.
-The question should match your personality.
+Ask the streamer a relaxed, short question (max 80 characters).
 
-Examples by personality:
-- Technical: "What software are you using?"
-- Curious: "How long have you been doing this?"
-- Supportive: "Can we help somehow?"
-- Funny: "Have you tried XY? Kappa"
+Be chill and friendly, like a normal viewer.
 
-Write ONLY the question to the streamer (max 100 characters):`
+Examples:
+- "What are you doing right now?"
+- "How's it going?"
+- "Have you tried XY?"
+- "Cool! How do you do that?"
+
+Message:`
         };
         
         return prompts[this.language];
@@ -469,84 +457,77 @@ Write ONLY the question to the streamer (max 100 characters):`
     
     buildDirectResponsePrompt(chatter, transcript) {
         const prompts = {
-            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
 
-Der Streamer hat DICH direkt angesprochen: "${transcript}"
+Der Streamer hat dich angesprochen: "${transcript}"
 
-Du wurdest direkt genannt oder angesprochen! Antworte auf den Streamer.
-Die Antwort sollte zu deiner Persönlichkeit passen.
+Antworte casual und direkt (max. 80 Zeichen).
 
-Wichtig:
-- Reagiere direkt auf das was der Streamer zu DIR gesagt hat
-- Sei deinem Charakter treu (${chatter.personality})
-- Maximal 100 Zeichen
+Sei freundlich und locker in deiner Antwort.
 
-Schreibe NUR deine Antwort:`,
+Beispiele:
+- "Ja klar, mach ich!"
+- "Danke! Freut mich"
+- "Haha, gute Frage"
+- "Ja genau, das stimmt"
+
+Deine Antwort:`,
             
-            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            en: `You are ${chatter.username}, a relaxed Twitch viewer.
 
-The streamer has addressed YOU directly: "${transcript}"
+The streamer addressed you: "${transcript}"
 
-You were directly mentioned or addressed! Respond to the streamer.
-The response should match your personality.
+Respond casually and directly (max 80 characters).
 
-Important:
-- React directly to what the streamer said to YOU
-- Stay true to your character (${chatter.personality})
-- Max 100 characters
+Be friendly and chill in your response.
 
-Write ONLY your response:`
+Examples:
+- "Yeah sure, will do!"
+- "Thanks! Appreciate it"
+- "Haha, good question"
+- "Yeah exactly, that's right"
+
+Your response:`
         };
         
         return prompts[this.language];
     }
     
     buildResponsePrompt(chatter, transcript) {
-        // Get only the last 3 messages from chat for minimal context
-        const recentContext = this.conversationHistory.slice(-3).join('\n');
-        
         const prompts = {
-            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            de: `Du bist ${chatter.username}, ein entspannter Twitch-Chatter.
 
-Der Streamer hat GERADE EBEN gesagt: "${transcript}"
+Der Streamer hat gerade gesagt: "${transcript}"
 
-${recentContext ? `Chat-Kontext:\n${recentContext}\n` : ''}
+Reagiere casual darauf (max. 80 Zeichen).
 
-Generiere eine passende Reaktion (max. 100 Zeichen), die zu deiner Persönlichkeit passt.
+Sei locker und freundlich, wie ein normaler Zuschauer.
+Manchmal ein Emote verwenden (PogChamp, Kappa, LUL).
 
-Wichtig: 
-- Reagiere NUR auf die aktuelle Aussage!
-- Sei deinem Charakter treu (${chatter.personality})
-- Verwende gelegentlich Emotes
+Beispiele:
+- "Cool! Mach weiter so"
+- "Interessant, erzähl mehr"
+- "Hab ich auch schon probiert"
+- "Nice! PogChamp"
 
-Mögliche Reaktionen:
-- Stelle eine Frage zum Gesagten
-- Kommentiere die Aussage
-- Zeige Zustimmung oder Zweifel
-- Teile deine Meinung
-
-Schreibe nur die Chat-Nachricht:`,
+Nachricht:`,
             
-            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+            en: `You are ${chatter.username}, a relaxed Twitch chatter.
 
-The streamer JUST said: "${transcript}"
+The streamer just said: "${transcript}"
 
-${recentContext ? `Chat context:\n${recentContext}\n` : ''}
+React casually to it (max 80 characters).
 
-Generate an appropriate response (max 100 characters) that matches your personality.
+Be chill and friendly, like a normal viewer.
+Sometimes use an emote (PogChamp, Kappa, LUL).
 
-Important:
-- React ONLY to the current statement!
-- Stay true to your character (${chatter.personality})
-- Occasionally use emotes
+Examples:
+- "Cool! Keep going"
+- "Interesting, tell more"
+- "I tried that too"
+- "Nice! PogChamp"
 
-Possible reactions:
-- Ask a question about what was said
-- Comment on the statement
-- Show agreement or doubt
-- Share your opinion
-
-Write only the chat message:`
+Message:`
         };
         
         return prompts[this.language];
@@ -579,8 +560,8 @@ Write only the chat message:`
         
         this.conversationHistory.push(`${chatter.username}: ${text}`);
         
-        // Keep only last 10 messages in history for better recency
-        if (this.conversationHistory.length > 10) {
+        // Keep only last 5 messages for maximum recency
+        if (this.conversationHistory.length > 5) {
             this.conversationHistory.shift();
         }
         

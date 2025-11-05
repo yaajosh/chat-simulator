@@ -205,11 +205,23 @@ class App {
         const minutes = Math.floor(duration / 60);
         const seconds = duration % 60;
         
-        // Stop microphone if active
-        if (this.speechHandler && this.speechHandler.isRecording) {
-            this.speechHandler.stop();
-            document.getElementById('micButton').classList.remove('recording');
-            document.getElementById('micStatus').textContent = this.languageManager.translate('mic-activate');
+        // IMPORTANT: Stop and reset microphone
+        if (this.speechHandler) {
+            if (this.speechHandler.isRecording) {
+                this.speechHandler.stop();
+            }
+            // Reset speech handler completely
+            this.speechHandler = null;
+        }
+        
+        // Reset mic button UI
+        const micButton = document.getElementById('micButton');
+        const micStatus = document.getElementById('micStatus');
+        if (micButton) {
+            micButton.classList.remove('recording');
+        }
+        if (micStatus) {
+            micStatus.textContent = this.languageManager.translate('mic-activate');
         }
         
         // Update UI
