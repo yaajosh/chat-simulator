@@ -21,33 +21,45 @@ export class ChatSimulator {
     }
     
     generateChatters() {
-        const germanNames = [
-            'MaxMustermann', 'LunaGaming', 'TechNinja92', 'StreamFan_DE', 
-            'GamerGirl_23', 'ProPlayer_X', 'ChatMaster', 'NiceVibes', 
-            'PixelKing', 'RetroGamer', 'ZockerPro', 'KaffeeJunkie'
+        const germanChatters = [
+            { name: 'MaxMustermann', personality: 'helpful', traits: 'asks thoughtful questions' },
+            { name: 'LunaGaming', personality: 'enthusiastic', traits: 'very supportive and positive' },
+            { name: 'TechNinja92', personality: 'technical', traits: 'knows a lot about tech' },
+            { name: 'StreamFan_DE', personality: 'curious', traits: 'always interested in learning' },
+            { name: 'GamerGirl_23', personality: 'funny', traits: 'makes jokes and uses emotes' },
+            { name: 'ProPlayer_X', personality: 'competitive', traits: 'gives tips and advice' },
+            { name: 'ChatMaster', personality: 'talkative', traits: 'likes to chat with others' },
+            { name: 'NiceVibes', personality: 'supportive', traits: 'always encouraging' },
+            { name: 'PixelKing', personality: 'creative', traits: 'shares ideas and suggestions' },
+            { name: 'RetroGamer', personality: 'nostalgic', traits: 'references old things' },
+            { name: 'ZockerPro', personality: 'critical', traits: 'asks challenging questions' },
+            { name: 'KaffeeJunkie', personality: 'casual', traits: 'relaxed and chill' }
         ];
         
-        const englishNames = [
-            'CoolGamer123', 'StreamLover', 'TechWizard', 'PixelPro',
-            'ChatKing', 'NightOwl', 'ProViewer', 'GamingFan',
-            'RetroStyle', 'ModernGamer', 'StreamSniper', 'ViewerOne'
+        const englishChatters = [
+            { name: 'CoolGamer123', personality: 'enthusiastic', traits: 'very excited about everything' },
+            { name: 'StreamLover', personality: 'supportive', traits: 'loves the content' },
+            { name: 'TechWizard', personality: 'technical', traits: 'expert in technology' },
+            { name: 'PixelPro', personality: 'creative', traits: 'artistic and imaginative' },
+            { name: 'ChatKing', personality: 'talkative', traits: 'engages with everyone' },
+            { name: 'NightOwl', personality: 'curious', traits: 'asks deep questions' },
+            { name: 'ProViewer', personality: 'helpful', traits: 'gives good advice' },
+            { name: 'GamingFan', personality: 'funny', traits: 'makes everyone laugh' },
+            { name: 'RetroStyle', personality: 'nostalgic', traits: 'loves old school' },
+            { name: 'ModernGamer', personality: 'competitive', traits: 'always up to date' },
+            { name: 'StreamSniper', personality: 'critical', traits: 'questions everything' },
+            { name: 'ViewerOne', personality: 'casual', traits: 'just here to chill' }
         ];
         
-        const names = this.language === 'de' ? germanNames : englishNames;
+        const chatters = this.language === 'de' ? germanChatters : englishChatters;
         
-        return names.map((name, index) => ({
-            username: name,
+        return chatters.map((chatter, index) => ({
+            username: chatter.name,
             colorId: (index % 10) + 1,
-            personality: this.getRandomPersonality()
+            personality: chatter.personality,
+            traits: chatter.traits,
+            lastInteraction: 0
         }));
-    }
-    
-    getRandomPersonality() {
-        const personalities = [
-            'enthusiastic', 'curious', 'funny', 'supportive', 
-            'critical', 'technical', 'casual', 'excited'
-        ];
-        return personalities[Math.floor(Math.random() * personalities.length)];
     }
     
     onMessage(callback) {
@@ -135,9 +147,36 @@ export class ChatSimulator {
     async generateRandomMessage() {
         if (!this.apiKey) return;
         
-        const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
+        // Decide what type of message to generate
+        const messageType = Math.random();
         
-        const prompt = this.buildRandomMessagePrompt(chatter);
+        if (messageType < 0.3 && this.conversationHistory.length > 2) {
+            // 30% chance: Chatter reacts to another chatter
+            this.generateChatterToChatterMessage();
+        } else if (messageType < 0.5) {
+            // 20% chance: Chatter asks streamer a question
+            this.generateStreamerQuestion();
+        } else {
+            // 50% chance: Random comment
+            const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
+            const prompt = this.buildRandomMessagePrompt(chatter);
+            this.queueAPICall(prompt, chatter);
+        }
+    }
+    
+    generateChatterToChatterMessage() {
+        const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
+        const recentMessages = this.conversationHistory.slice(-3);
+        
+        if (recentMessages.length === 0) return;
+        
+        const prompt = this.buildChatterInteractionPrompt(chatter, recentMessages);
+        this.queueAPICall(prompt, chatter);
+    }
+    
+    generateStreamerQuestion() {
+        const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
+        const prompt = this.buildStreamerQuestionPrompt(chatter);
         this.queueAPICall(prompt, chatter);
     }
     
@@ -190,38 +229,110 @@ export class ChatSimulator {
     }
     
     buildRandomMessagePrompt(chatter) {
-        const context = this.conversationHistory.slice(-10).join('\n');
+        const context = this.conversationHistory.slice(-5).join('\n');
         
         const prompts = {
-            de: `Du bist ${chatter.username}, ein Twitch-Chat-Nutzer mit einer ${chatter.personality} Persönlichkeit.
-Generiere eine kurze, authentische Chat-Nachricht (max. 100 Zeichen).
-Die Nachricht sollte zur aktuellen Unterhaltung passen oder ein neues Thema einbringen.
+            de: `Du bist ${chatter.username}, ein Twitch-Chat-Nutzer.
+Persönlichkeit: ${chatter.personality}
+Charakter: ${chatter.traits}
 
-Bisheriger Chat-Verlauf:
-${context || 'Der Chat hat gerade erst begonnen.'}
+Generiere eine kurze, authentische Chat-Nachricht (max. 100 Zeichen).
+
+${context ? `Chat-Verlauf:\n${context}\n` : 'Der Chat hat gerade erst begonnen.'}
 
 Regeln:
 - Schreibe nur die Chat-Nachricht, keine Erklärungen
-- Verwende gelegentlich Twitch-Emotes wie PogChamp, Kappa, LUL
-- Sei natürlich und authentisch
+- Verwende gelegentlich Emotes: PogChamp, Kappa, LUL, ResidentSleeper
+- Sei deinem Charakter treu (${chatter.personality})
 - Maximal 1-2 Sätze
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a Twitch chat user with a ${chatter.personality} personality.
-Generate a short, authentic chat message (max 100 characters).
-The message should fit the current conversation or introduce a new topic.
+            en: `You are ${chatter.username}, a Twitch chat user.
+Personality: ${chatter.personality}
+Character: ${chatter.traits}
 
-Previous chat:
-${context || 'Chat just started.'}
+Generate a short, authentic chat message (max 100 characters).
+
+${context ? `Chat history:\n${context}\n` : 'Chat just started.'}
 
 Rules:
 - Write only the chat message, no explanations
-- Occasionally use Twitch emotes like PogChamp, Kappa, LUL
-- Be natural and authentic
+- Occasionally use emotes: PogChamp, Kappa, LUL, ResidentSleeper
+- Stay true to your character (${chatter.personality})
 - Max 1-2 sentences
 
 Message:`
+        };
+        
+        return prompts[this.language];
+    }
+    
+    buildChatterInteractionPrompt(chatter, recentMessages) {
+        const context = recentMessages.join('\n');
+        
+        const prompts = {
+            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+
+Neueste Chat-Nachrichten:
+${context}
+
+Reagiere auf eine dieser Nachrichten oder starte eine Diskussion mit einem anderen Chatter.
+Verwende @username um jemanden direkt anzusprechen.
+
+Beispiele:
+- "@MaxMustermann das stimmt, ich denke auch..."
+- "@LunaGaming hast du das schon ausprobiert?"
+- "Ich bin bei @TechNinja92, das ist eine gute Idee"
+
+Schreibe NUR die Chat-Nachricht (max. 100 Zeichen):`,
+            
+            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+
+Recent chat messages:
+${context}
+
+React to one of these messages or start a discussion with another chatter.
+Use @username to address someone directly.
+
+Examples:
+- "@MaxMustermann I agree, I think..."
+- "@LunaGaming have you tried that?"
+- "I'm with @TechNinja92, that's a good idea"
+
+Write ONLY the chat message (max 100 characters):`
+        };
+        
+        return prompts[this.language];
+    }
+    
+    buildStreamerQuestionPrompt(chatter) {
+        const prompts = {
+            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+
+Du möchtest den Streamer etwas fragen.
+Die Frage sollte zu deiner Persönlichkeit passen.
+
+Beispiele je nach Persönlichkeit:
+- Technical: "Welche Software benutzt du dafür?"
+- Curious: "Wie lange machst du das schon?"
+- Supportive: "Können wir irgendwie helfen?"
+- Funny: "Hast du schon mal XY versucht? Kappa"
+
+Schreibe NUR die Frage an den Streamer (max. 100 Zeichen):`,
+            
+            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+
+You want to ask the streamer a question.
+The question should match your personality.
+
+Examples by personality:
+- Technical: "What software are you using?"
+- Curious: "How long have you been doing this?"
+- Supportive: "Can we help somehow?"
+- Funny: "Have you tried XY? Kappa"
+
+Write ONLY the question to the streamer (max 100 characters):`
         };
         
         return prompts[this.language];
@@ -231,24 +342,87 @@ Message:`
         if (!this.apiKey || !transcript) return;
         
         try {
-            // Generate 1-2 responses to avoid rate limits
+            // Check if streamer is addressing a specific chatter
+            const addressedChatter = this.findAddressedChatter(transcript);
+            
+            if (addressedChatter) {
+                // The addressed chatter MUST respond
+                const prompt = this.buildDirectResponsePrompt(addressedChatter, transcript);
+                this.queueAPICall(prompt, addressedChatter);
+                addressedChatter.lastInteraction = Date.now();
+            }
+            
+            // Generate 1-2 general responses from other chatters
             const numResponses = Math.min(
                 Math.floor(this.activityLevel / 5) + 1,
-                2
+                addressedChatter ? 1 : 2
             );
             
             for (let i = 0; i < numResponses; i++) {
-                const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
+                let chatter;
+                // Don't pick the same chatter that was directly addressed
+                do {
+                    chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
+                } while (addressedChatter && chatter.username === addressedChatter.username);
+                
                 const prompt = this.buildResponsePrompt(chatter, transcript);
                 
-                // Queue the request instead of calling directly
                 setTimeout(() => {
                     this.queueAPICall(prompt, chatter);
-                }, i * 1000);
+                }, (i + (addressedChatter ? 1 : 0)) * 1500);
             }
         } catch (error) {
             console.error('Error responding to speech:', error);
         }
+    }
+    
+    findAddressedChatter(transcript) {
+        const lowerTranscript = transcript.toLowerCase();
+        
+        // Check for @mentions
+        for (const chatter of this.chatters) {
+            const lowerName = chatter.username.toLowerCase();
+            if (lowerTranscript.includes('@' + lowerName) || 
+                lowerTranscript.includes(lowerName)) {
+                return chatter;
+            }
+        }
+        
+        return null;
+    }
+    
+    buildDirectResponsePrompt(chatter, transcript) {
+        const prompts = {
+            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+
+Der Streamer hat DICH direkt angesprochen: "${transcript}"
+
+Du wurdest direkt genannt oder angesprochen! Antworte auf den Streamer.
+Die Antwort sollte zu deiner Persönlichkeit passen.
+
+Wichtig:
+- Reagiere direkt auf das was der Streamer zu DIR gesagt hat
+- Sei deinem Charakter treu (${chatter.personality})
+- Maximal 100 Zeichen
+
+Schreibe NUR deine Antwort:`,
+            
+            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
+
+The streamer has addressed YOU directly: "${transcript}"
+
+You were directly mentioned or addressed! Respond to the streamer.
+The response should match your personality.
+
+Important:
+- React directly to what the streamer said to YOU
+- Stay true to your character (${chatter.personality})
+- Max 100 characters
+
+Write ONLY your response:`
+        };
+        
+        return prompts[this.language];
     }
     
     buildResponsePrompt(chatter, transcript) {
@@ -256,43 +430,47 @@ Message:`
         const recentContext = this.conversationHistory.slice(-3).join('\n');
         
         const prompts = {
-            de: `Du bist ${chatter.username}, ein Twitch-Chat-Nutzer mit einer ${chatter.personality} Persönlichkeit.
+            de: `Du bist ${chatter.username} (${chatter.personality}, ${chatter.traits}).
 
 Der Streamer hat GERADE EBEN gesagt: "${transcript}"
 
-${recentContext ? `Kurzer Chat-Kontext:\n${recentContext}\n` : ''}
-Generiere eine passende, kurze Reaktion auf das was der Streamer GERADE GESAGT HAT (max. 100 Zeichen).
+${recentContext ? `Chat-Kontext:\n${recentContext}\n` : ''}
 
-Wichtig: Reagiere NUR auf die aktuelle Aussage, nicht auf alte Themen!
+Generiere eine passende Reaktion (max. 100 Zeichen), die zu deiner Persönlichkeit passt.
+
+Wichtig: 
+- Reagiere NUR auf die aktuelle Aussage!
+- Sei deinem Charakter treu (${chatter.personality})
+- Verwende gelegentlich Emotes
 
 Mögliche Reaktionen:
-- Stelle eine Frage zum gerade Gesagten
-- Kommentiere die aktuelle Aussage
-- Zeige Zustimmung oder stelle es in Frage
-- Bringe verwandte Themen ein
+- Stelle eine Frage zum Gesagten
+- Kommentiere die Aussage
+- Zeige Zustimmung oder Zweifel
+- Teile deine Meinung
 
-Schreibe nur die Chat-Nachricht, keine Erklärungen.
-
-Nachricht:`,
+Schreibe nur die Chat-Nachricht:`,
             
-            en: `You are ${chatter.username}, a Twitch chat user with a ${chatter.personality} personality.
+            en: `You are ${chatter.username} (${chatter.personality}, ${chatter.traits}).
 
 The streamer JUST said: "${transcript}"
 
-${recentContext ? `Brief chat context:\n${recentContext}\n` : ''}
-Generate an appropriate, short response to what the streamer JUST SAID (max 100 characters).
+${recentContext ? `Chat context:\n${recentContext}\n` : ''}
 
-Important: React ONLY to the current statement, not old topics!
+Generate an appropriate response (max 100 characters) that matches your personality.
+
+Important:
+- React ONLY to the current statement!
+- Stay true to your character (${chatter.personality})
+- Occasionally use emotes
 
 Possible reactions:
-- Ask a question about what was just said
-- Comment on the current statement
-- Show agreement or question it
-- Bring up related topics
+- Ask a question about what was said
+- Comment on the statement
+- Show agreement or doubt
+- Share your opinion
 
-Write only the chat message, no explanations.
-
-Message:`
+Write only the chat message:`
         };
         
         return prompts[this.language];
