@@ -147,17 +147,20 @@ export class ChatSimulator {
     async generateRandomMessage() {
         if (!this.apiKey) return;
         
+        // Clear old conversation history periodically to avoid topic loops
+        if (this.conversationHistory.length > 3) {
+            // Remove oldest message to keep things fresh
+            this.conversationHistory.shift();
+        }
+        
         // Decide what type of message to generate
         const messageType = Math.random();
         
-        if (messageType < 0.3 && this.conversationHistory.length > 2) {
-            // 30% chance: Chatter reacts to another chatter
-            this.generateChatterToChatterMessage();
-        } else if (messageType < 0.5) {
-            // 20% chance: Chatter asks streamer a question
+        if (messageType < 0.7) {
+            // 70% chance: Ask streamer a question (more focus on streamer)
             this.generateStreamerQuestion();
         } else {
-            // 50% chance: Random comment
+            // 30% chance: Random observation/comment (no chatter-to-chatter!)
             const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
             const prompt = this.buildRandomMessagePrompt(chatter);
             this.queueAPICall(prompt, chatter);
@@ -229,31 +232,38 @@ export class ChatSimulator {
     }
     
     buildRandomMessagePrompt(chatter) {
-        // Only use last 2 messages for recency
-        const context = this.conversationHistory.slice(-2).join('\n');
-        
         const prompts = {
-            de: `Du bist ${chatter.username}, ein casual Twitch-Chatter (${chatter.traits}).
+            de: `Du bist ${chatter.username}, ein casual Twitch-Zuschauer.
 
-${context ? `Letzte Nachrichten:\n${context}\n` : ''}
+Schreibe eine kurze, lockere Bemerkung oder Frage (max. 60 Zeichen).
 
-Schreibe eine kurze, lockere Chat-Nachricht (max. 80 Zeichen).
-Reagiere am besten auf die LETZTE Nachricht oder das aktuelle Thema.
+Themen: Gaming, Technik, was auch immer gerade interessant ist.
+Sei entspannt und freundlich.
+Verwende manchmal ein Emote: PogChamp, Kappa, LUL
 
-Sei casual und entspannt, wie ein echter Twitch-Zuschauer.
-Verwende manchmal Emotes: PogChamp, Kappa, LUL
+WICHTIG: Beziehe dich NICHT auf alte Themen! Sei frisch und aktuell.
+
+Beispiele:
+- "Läuft gut hier!"
+- "Was kommt als nächstes?"
+- "Cool! PogChamp"
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a casual Twitch chatter (${chatter.traits}).
+            en: `You are ${chatter.username}, a casual Twitch viewer.
 
-${context ? `Recent messages:\n${context}\n` : ''}
+Write a short, relaxed remark or question (max 60 characters).
 
-Write a short, casual chat message (max 80 characters).
-React to the LAST message or current topic.
+Topics: Gaming, tech, whatever seems interesting.
+Be chill and friendly.
+Sometimes use an emote: PogChamp, Kappa, LUL
 
-Be casual and relaxed, like a real Twitch viewer.
-Sometimes use emotes: PogChamp, Kappa, LUL
+IMPORTANT: Do NOT reference old topics! Be fresh and current.
+
+Examples:
+- "Going well here!"
+- "What's next?"
+- "Cool! PogChamp"
 
 Message:`
         };
@@ -294,33 +304,39 @@ Message:`
     
     buildStreamerQuestionPrompt(chatter) {
         const prompts = {
-            de: `Du bist ${chatter.username}, ein casual Twitch-Chatter.
+            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
 
-Stelle dem Streamer eine lockere, kurze Frage (max. 80 Zeichen).
+Stelle dem Streamer eine einfache, kurze Frage (max. 60 Zeichen).
 
-Sei entspannt und freundlich, wie ein normaler Zuschauer.
+WICHTIG: Erfinde eine NEUE Frage, beziehe dich NICHT auf alte Themen!
+
+Sei freundlich und interessiert.
 
 Beispiele:
-- "Was machst du da gerade?"
-- "Wie läuft's so?"
-- "Hast du XY schon probiert?"
-- "Cool! Wie machst du das?"
+- "Was machst du da?"
+- "Wie geht's?"
+- "Zeigst du uns was Neues?"
+- "Was ist dein Tipp dazu?"
+- "Magst du XY?"
 
-Nachricht:`,
+Frage:`,
             
-            en: `You are ${chatter.username}, a casual Twitch chatter.
+            en: `You are ${chatter.username}, a relaxed Twitch viewer.
 
-Ask the streamer a relaxed, short question (max 80 characters).
+Ask the streamer a simple, short question (max 60 characters).
 
-Be chill and friendly, like a normal viewer.
+IMPORTANT: Come up with a NEW question, do NOT reference old topics!
+
+Be friendly and interested.
 
 Examples:
-- "What are you doing right now?"
+- "What are you doing?"
 - "How's it going?"
-- "Have you tried XY?"
-- "Cool! How do you do that?"
+- "Showing us something new?"
+- "What's your tip on this?"
+- "Do you like XY?"
 
-Message:`
+Question:`
         };
         
         return prompts[this.language];
@@ -558,10 +574,14 @@ Message:`
             timestamp: Date.now()
         };
         
-        this.conversationHistory.push(`${chatter.username}: ${text}`);
+        // Only store streamer responses in history, not all chat messages
+        // This prevents chatters from looping on their own conversations
+        if (chatter.username === 'Du' || message.text.length < 120) {
+            this.conversationHistory.push(`${chatter.username}: ${text}`);
+        }
         
-        // Keep only last 5 messages for maximum recency
-        if (this.conversationHistory.length > 5) {
+        // Keep only last 3 messages for maximum recency
+        if (this.conversationHistory.length > 3) {
             this.conversationHistory.shift();
         }
         
