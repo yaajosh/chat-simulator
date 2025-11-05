@@ -156,11 +156,14 @@ export class ChatSimulator {
         // Decide what type of message to generate
         const messageType = Math.random();
         
-        if (messageType < 0.7) {
-            // 70% chance: Ask streamer a question (more focus on streamer)
+        if (messageType < 0.6) {
+            // 60% chance: Ask streamer a question (main focus on streamer)
             this.generateStreamerQuestion();
+        } else if (messageType < 0.75 && this.conversationHistory.length > 1) {
+            // 15% chance: Chatter reacts to another chatter (reduced from 30%)
+            this.generateChatterToChatterMessage();
         } else {
-            // 30% chance: Random observation/comment (no chatter-to-chatter!)
+            // 25% chance: Random observation/comment
             const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
             const prompt = this.buildRandomMessagePrompt(chatter);
             this.queueAPICall(prompt, chatter);
@@ -281,9 +284,14 @@ Message:`
 Letzte Nachricht im Chat:
 ${lastMessage}
 
-Reagiere casual auf diese Nachricht. Verwende @username wenn du willst.
+Reagiere KURZ darauf (max. 50 Zeichen). Verwende @username.
 
-Sei locker und entspannt, kurz halten (max. 80 Zeichen).
+Halte es super kurz und casual!
+
+Beispiele:
+- "@Max genau!"
+- "@Luna true true"
+- "@Tech stimmt Kappa"
 
 Nachricht:`,
             
@@ -292,9 +300,14 @@ Nachricht:`,
 Last message in chat:
 ${lastMessage}
 
-React casually to this message. Use @username if you want.
+React BRIEFLY to it (max 50 characters). Use @username.
 
-Be chill and relaxed, keep it short (max 80 characters).
+Keep it super short and casual!
+
+Examples:
+- "@Max exactly!"
+- "@Luna true true"
+- "@Tech yup Kappa"
 
 Message:`
         };
@@ -574,11 +587,8 @@ Message:`
             timestamp: Date.now()
         };
         
-        // Only store streamer responses in history, not all chat messages
-        // This prevents chatters from looping on their own conversations
-        if (chatter.username === 'Du' || message.text.length < 120) {
-            this.conversationHistory.push(`${chatter.username}: ${text}`);
-        }
+        // Store messages in history, but limit to prevent loops
+        this.conversationHistory.push(`${chatter.username}: ${text}`);
         
         // Keep only last 3 messages for maximum recency
         if (this.conversationHistory.length > 3) {
