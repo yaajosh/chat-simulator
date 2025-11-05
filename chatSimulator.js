@@ -346,10 +346,15 @@ Write ONLY the question to the streamer (max 100 characters):`
             const addressedChatter = this.findAddressedChatter(transcript);
             
             if (addressedChatter) {
+                console.log(`🎯 Detected address to chatter: ${addressedChatter.username}`);
+                console.log(`📝 Transcript: "${transcript}"`);
+                
                 // The addressed chatter MUST respond
                 const prompt = this.buildDirectResponsePrompt(addressedChatter, transcript);
                 this.queueAPICall(prompt, addressedChatter);
                 addressedChatter.lastInteraction = Date.now();
+            } else {
+                console.log(`💬 General statement (no specific chatter addressed)`);
             }
             
             // Generate 1-2 general responses from other chatters
@@ -379,16 +384,87 @@ Write ONLY the question to the streamer (max 100 characters):`
     findAddressedChatter(transcript) {
         const lowerTranscript = transcript.toLowerCase();
         
-        // Check for @mentions
         for (const chatter of this.chatters) {
             const lowerName = chatter.username.toLowerCase();
-            if (lowerTranscript.includes('@' + lowerName) || 
-                lowerTranscript.includes(lowerName)) {
+            
+            // 1. Check for exact username match
+            if (lowerTranscript.includes(lowerName)) {
                 return chatter;
+            }
+            
+            // 2. Check for @mention
+            if (lowerTranscript.includes('@' + lowerName)) {
+                return chatter;
+            }
+            
+            // 3. Handle names with spaces (e.g., "Retro Style" for "RetroStyle")
+            const nameWithSpaces = this.addSpacesToCamelCase(chatter.username).toLowerCase();
+            if (nameWithSpaces !== lowerName && lowerTranscript.includes(nameWithSpaces)) {
+                return chatter;
+            }
+            
+            // 4. Check for first part of username (e.g., "Max" for "MaxMustermann")
+            const firstPart = this.getFirstPartOfName(chatter.username).toLowerCase();
+            if (firstPart.length >= 3) { // Only match if first part is 3+ characters
+                // Use word boundary to avoid false matches
+                const regex = new RegExp(`\\b${this.escapeRegex(firstPart)}\\b`, 'i');
+                if (regex.test(lowerTranscript)) {
+                    return chatter;
+                }
+            }
+            
+            // 5. Handle common German/English name variations
+            const nameParts = this.splitUsername(chatter.username);
+            for (const part of nameParts) {
+                if (part.length >= 4 && lowerTranscript.includes(part.toLowerCase())) {
+                    return chatter;
+                }
             }
         }
         
         return null;
+    }
+    
+    addSpacesToCamelCase(name) {
+        // Convert "RetroStyle" to "Retro Style"
+        // Convert "MaxMustermann" to "Max Mustermann"
+        return name.replace(/([a-z])([A-Z])/g, '$1 $2')
+                   .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2');
+    }
+    
+    getFirstPartOfName(name) {
+        // Extract first part: "MaxMustermann" -> "Max"
+        // "LunaGaming" -> "Luna"
+        // "TechNinja92" -> "Tech"
+        
+        // Split on capital letters
+        const match = name.match(/^[A-Z][a-z]+/);
+        if (match) {
+            return match[0];
+        }
+        
+        // If no camel case, split on numbers or special chars
+        const parts = name.split(/[\d_-]/);
+        return parts[0];
+    }
+    
+    splitUsername(name) {
+        // Split username into meaningful parts
+        const parts = [];
+        
+        // Split by capital letters (CamelCase)
+        const camelParts = name.split(/(?=[A-Z])/);
+        parts.push(...camelParts.filter(p => p.length > 0));
+        
+        // Split by numbers and special characters
+        const specialParts = name.split(/[\d_-]/);
+        parts.push(...specialParts.filter(p => p.length > 0));
+        
+        return [...new Set(parts)]; // Remove duplicates
+    }
+    
+    escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
     
     buildDirectResponsePrompt(chatter, transcript) {

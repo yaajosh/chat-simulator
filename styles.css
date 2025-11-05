@@ -127,17 +127,55 @@ body {
     color: #adadb8;
 }
 
-.practice-header {
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
     background: linear-gradient(135deg, #9147ff 0%, #772ce8 100%);
-    padding: 20px;
     border-radius: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-.practice-header h1 {
+.top-bar .logo h1 {
     font-size: 22px;
-    margin-bottom: 8px;
     color: white;
+    margin: 0;
+}
+
+.language-switch {
+    display: flex;
+    gap: 8px;
+}
+
+.lang-button {
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lang-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.lang-button.active {
+    background-color: white;
+    color: #9147ff;
+    border-color: white;
+}
+
+.practice-header {
+    background: linear-gradient(135deg, #9147ff 0%, #772ce8 100%);
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .practice-header p {

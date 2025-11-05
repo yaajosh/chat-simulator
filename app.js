@@ -1,6 +1,7 @@
 // Chat Simulator App
 import { ChatSimulator } from './chatSimulator.js';
 import { SpeechRecognitionHandler } from './speechRecognition.js';
+import { LanguageManager } from './translations.js';
 
 class App {
     constructor() {
@@ -10,6 +11,7 @@ class App {
         this.sessionActive = false;
         this.sessionStartTime = null;
         this.timerInterval = null;
+        this.languageManager = new LanguageManager();
         
         this.init();
     }
@@ -21,6 +23,15 @@ class App {
     }
     
     setupEventListeners() {
+        // Language switch
+        document.getElementById('langDE').addEventListener('click', () => {
+            this.switchLanguage('de');
+        });
+        
+        document.getElementById('langEN').addEventListener('click', () => {
+            this.switchLanguage('en');
+        });
+        
         // Session Controls
         document.getElementById('startSessionButton').addEventListener('click', () => {
             this.startSession();
@@ -91,9 +102,30 @@ class App {
             document.getElementById('apiKey').value = apiKey;
         }
         
-        // Load language
-        const language = localStorage.getItem('chat-sim-language') || 'de';
-        document.getElementById('language').value = language;
+        // Load and apply language
+        const language = this.languageManager.getCurrentLanguage();
+        this.updateLanguageButtons(language);
+        this.languageManager.updateUI();
+    }
+    
+    switchLanguage(lang) {
+        this.languageManager.setLanguage(lang);
+        this.updateLanguageButtons(lang);
+        
+        // Update chat simulator language
+        if (this.chatSimulator) {
+            this.chatSimulator.setLanguage(lang);
+        }
+        
+        // Update speech recognition language
+        if (this.speechHandler) {
+            this.speechHandler.setLanguage(lang);
+        }
+    }
+    
+    updateLanguageButtons(lang) {
+        document.getElementById('langDE').classList.toggle('active', lang === 'de');
+        document.getElementById('langEN').classList.toggle('active', lang === 'en');
     }
     
     saveApiKey(apiKey) {
@@ -102,13 +134,13 @@ class App {
             this.chatSimulator.setApiKey(apiKey);
             // Restart chat simulator with new API key
             this.chatSimulator.start();
-            this.displaySystemMessage('API Key gespeichert! Chat-Simulator neu gestartet.');
+            this.displaySystemMessage(this.languageManager.translate('api-key-saved'));
         }
     }
     
     initializeChatSimulator() {
         const apiKey = localStorage.getItem('gemini-api-key');
-        const language = document.getElementById('language').value;
+        const language = this.languageManager.getCurrentLanguage();
         
         this.chatSimulator = new ChatSimulator(apiKey, language);
         this.chatSimulator.onMessage((message) => {
@@ -117,16 +149,16 @@ class App {
         
         // Check if API key is set
         if (!apiKey) {
-            this.displaySystemMessage('⚠️ Bitte gib deinen Gemini API Key in den Einstellungen ein.');
+            this.displaySystemMessage(this.languageManager.translate('no-api-key'));
         } else {
-            this.displaySystemMessage('✓ Bereit zum Üben! Starte eine Session um loszulegen.');
+            this.displaySystemMessage(this.languageManager.translate('ready-to-practice'));
         }
     }
     
     startSession() {
         const apiKey = localStorage.getItem('gemini-api-key');
         if (!apiKey) {
-            alert('Bitte gib zuerst deinen Gemini API Key in den Einstellungen ein!');
+            alert(this.languageManager.translate('alert-api-key'));
             return;
         }
         
@@ -148,8 +180,8 @@ class App {
         
         // Clear and start chat
         this.clearChat();
-        this.displaySystemMessage('🎬 Übungssession gestartet! Viel Erfolg!');
-        this.displaySystemMessage('💡 Tipp: Aktiviere dein Mikrofon und fang an zu sprechen.');
+        this.displaySystemMessage(this.languageManager.translate('session-started'));
+        this.displaySystemMessage(this.languageManager.translate('session-tip'));
         
         if (this.chatSimulator) {
             this.chatSimulator.start();
@@ -174,7 +206,7 @@ class App {
         if (this.speechHandler && this.speechHandler.isRecording) {
             this.speechHandler.stop();
             document.getElementById('micButton').classList.remove('recording');
-            document.getElementById('micStatus').textContent = 'Mikrofon aktivieren';
+            document.getElementById('micStatus').textContent = this.languageManager.translate('mic-activate');
         }
         
         // Update UI
@@ -192,8 +224,10 @@ class App {
             this.chatSimulator.stop();
         }
         
-        this.displaySystemMessage(`✓ Session beendet! Dauer: ${minutes}m ${seconds}s`);
-        this.displaySystemMessage('👏 Gut gemacht! Bereit für die nächste Runde?');
+        this.displaySystemMessage(this.languageManager.translate('session-ended', {
+            duration: `${minutes}m ${seconds}s`
+        }));
+        this.displaySystemMessage(this.languageManager.translate('session-done'));
     }
     
     updateTimer() {
@@ -209,7 +243,7 @@ class App {
     
     async toggleMicrophone() {
         if (!this.sessionActive) {
-            alert('Bitte starte zuerst eine Übungssession!');
+            alert(this.languageManager.translate('alert-start-session'));
             return;
         }
         
@@ -219,11 +253,11 @@ class App {
         if (!this.speechHandler) {
             const apiKey = localStorage.getItem('gemini-api-key');
             if (!apiKey) {
-                alert('Bitte gib zuerst deinen Gemini API Key ein!');
+                alert(this.languageManager.translate('alert-api-key'));
                 return;
             }
             
-            const language = document.getElementById('language').value;
+            const language = this.languageManager.getCurrentLanguage();
             this.speechHandler = new SpeechRecognitionHandler(language);
             
             // Display transcript as it's being spoken
@@ -248,14 +282,14 @@ class App {
         if (this.speechHandler.isRecording) {
             this.speechHandler.stop();
             button.classList.remove('recording');
-            status.textContent = 'Mikrofon aktivieren';
+            status.textContent = this.languageManager.translate('mic-activate');
         } else {
             try {
                 await this.speechHandler.start();
                 button.classList.add('recording');
-                status.textContent = 'Aufnahme läuft...';
+                status.textContent = this.languageManager.translate('mic-recording');
             } catch (error) {
-                alert('Mikrofon-Zugriff verweigert oder nicht verfügbar.');
+                alert(this.languageManager.translate('alert-mic-denied'));
             }
         }
     }
