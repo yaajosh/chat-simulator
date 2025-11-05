@@ -155,12 +155,12 @@ body {
 }
 
 .lang-button {
-    padding: 8px 16px;
+    padding: 6px 12px;
     background-color: rgba(255, 255, 255, 0.2);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 6px;
     color: white;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
@@ -181,7 +181,6 @@ body {
     display: flex;
     gap: 12px;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .session-button {
@@ -259,22 +258,16 @@ body {
     color: #adadb8;
 }
 
-.tips-section {
-    background-color: rgba(145, 71, 255, 0.1);
-    border: 1px solid rgba(145, 71, 255, 0.3);
+.stream-info {
+    background-color: #18181b;
+    padding: 20px;
     border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 20px;
+    border: 1px solid #2d2d31;
 }
 
-.tips-section h3 {
-    font-size: 15px;
+.stream-info h2 {
+    font-size: 16px;
     margin-bottom: 12px;
-    color: #efeff1;
-}
-
-.tips-section h4 {
-    font-size: 13px;
     color: #efeff1;
 }
 
@@ -285,10 +278,10 @@ body {
 }
 
 .tips-list li {
-    padding: 6px 0;
-    padding-left: 20px;
+    padding: 8px 0;
+    padding-left: 24px;
     position: relative;
-    font-size: 12px;
+    font-size: 13px;
     color: #adadb8;
     line-height: 1.5;
 }
@@ -297,19 +290,9 @@ body {
     content: "✓";
     position: absolute;
     left: 0;
-    color: #9147ff;
+    color: #00b894;
     font-weight: bold;
     font-size: 14px;
-}
-
-.tips-list-small li {
-    font-size: 11px;
-    padding: 4px 0;
-    padding-left: 16px;
-}
-
-.tips-list-small li:before {
-    font-size: 12px;
 }
 
 .chat-section {
@@ -464,8 +447,8 @@ body {
 }
 
 .settings-panel h3 {
-    font-size: 15px;
-    margin-bottom: 16px;
+    font-size: 16px;
+    margin-bottom: 20px;
     color: #efeff1;
 }
 

@@ -7,22 +7,21 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Stream-Präsentations-Trainer | Übungstool</title>
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
     <div class="container">
-        <div class="top-bar">
-            <div class="logo">
-                <h1>🎓 <span data-i18n="app-title">Stream-Präsentations-Trainer</span></h1>
-            </div>
-            <div class="language-switch">
-                <button id="langDE" class="lang-button active">🇩🇪 DE</button>
-                <button id="langEN" class="lang-button">🇬🇧 EN</button>
-            </div>
-        </div>
-        
         <div class="main-content">
             <div class="video-section">
+                <div class="practice-header">
+                    <h1>🎓 <span data-i18n="app-title">Stream-Präsentations-Trainer</span></h1>
+                    <p data-i18n="app-subtitle">Übe Live-Präsentationen mit KI-generiertem Chat-Feedback</p>
+                    <div class="language-switch">
+                        <button id="langDE" class="lang-button active">🇩🇪 DE</button>
+                        <button id="langEN" class="lang-button">🇬🇧 EN</button>
+                    </div>
+                </div>
+                
                 <div class="session-controls">
                     <button id="startSessionButton" class="session-button start-button">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -73,6 +72,16 @@
                         <div id="transcription" class="transcription"></div>
                     </div>
                 </div>
+                
+                <div class="stream-info">
+                    <h2>📋 <span data-i18n="tips-title">Übungstipps</span></h2>
+                    <ul class="tips-list">
+                        <li data-i18n="tip-1">Sprich klar und deutlich in dein Mikrofon</li>
+                        <li data-i18n="tip-2">Beobachte die Chat-Reaktionen und reagiere darauf</li>
+                        <li data-i18n="tip-3">Beantworte Fragen aus dem Chat</li>
+                        <li data-i18n="tip-4">Übe verschiedene Präsentationsstile</li>
+                    </ul>
+                </div>
             </div>
             
             <div class="chat-section">
@@ -108,25 +117,7 @@
         </div>
         
         <div class="settings-panel">
-            <div class="tips-section">
-                <h3>📋 <span data-i18n="tips-title">Übungstipps</span></h3>
-                <ul class="tips-list">
-                    <li data-i18n="tip-1">Sprich klar und deutlich in dein Mikrofon</li>
-                    <li data-i18n="tip-2">Beobachte die Chat-Reaktionen und reagiere darauf</li>
-                    <li data-i18n="tip-3">Beantworte Fragen aus dem Chat</li>
-                    <li data-i18n="tip-4">Übe verschiedene Präsentationsstile</li>
-                </ul>
-                
-                <h4 style="margin-top: 15px; font-size: 13px;">💡 <span data-i18n="address-chatters">Chatter ansprechen:</span></h4>
-                <ul class="tips-list tips-list-small">
-                    <li><strong data-i18n="full-name">Voller Name:</strong> <span data-i18n="example-full">"MaxMustermann, was denkst du?"</span></li>
-                    <li><strong data-i18n="first-name">Vorname:</strong> <span data-i18n="example-first">"Hey Max, gute Frage!"</span></li>
-                    <li><strong data-i18n="with-space">Mit Leerzeichen:</strong> <span data-i18n="example-space">"Luna Gaming hat recht"</span></li>
-                    <li><strong>@Mention:</strong> <span data-i18n="example-mention">"Danke @TechNinja"</span></li>
-                </ul>
-            </div>
-            
-            <h3 style="margin-top: 20px;">⚙️ <span data-i18n="settings-title">Einstellungen</span></h3>
+            <h3>⚙️ <span data-i18n="settings-title">Einstellungen</span></h3>
             <div class="setting-group">
                 <label for="apiKey" data-i18n="api-key-label">Gemini API Key:</label>
                 <input type="password" id="apiKey" data-i18n-placeholder="api-key-placeholder" placeholder="Dein Gemini API Key">
