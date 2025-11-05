@@ -5,7 +5,7 @@ Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Cha
 ## Features
 
 - 🎮 **Authentisches Twitch-Chat Design** - Sieht aus wie ein echter Twitch-Stream
-- 🤖 **KI-generierte Chatter** - Gemini 2.0 Flash erstellt realistische Chat-Nachrichten
+- 🤖 **KI-generierte Chatter** - Gemini 2.5 Flash erstellt realistische Chat-Nachrichten
 - 🎤 **Mikrofon-Integration** - Spreche in dein Mikrofon und die KI-Chatter reagieren auf das Gesagte
 - 🌍 **Mehrsprachig** - Unterstützt Deutsch und Englisch
 - ⚙️ **Anpassbare Chat-Aktivität** - Stelle ein, wie aktiv der Chat sein soll
