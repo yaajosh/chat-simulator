@@ -2,7 +2,7 @@
 export const translations = {
     de: {
         'app-title': 'Stream-Präsentations-Trainer',
-        'app-subtitle': 'Übungstool für Praktikanten - Lerne sicher vor der Kamera zu sprechen',
+        'app-subtitle': 'Übe Live-Präsentationen mit KI-generiertem Chat-Feedback',
         'start-session': 'Übungssession starten',
         'stop-session': 'Session beenden',
         'ready-title': 'Bereit zum Üben?',
@@ -53,7 +53,7 @@ export const translations = {
     },
     en: {
         'app-title': 'Stream Presentation Trainer',
-        'app-subtitle': 'Practice tool for interns - Learn to speak confidently on camera',
+        'app-subtitle': 'Practice live presentations with AI-generated chat feedback',
         'start-session': 'Start Practice Session',
         'stop-session': 'End Session',
         'ready-title': 'Ready to Practice?',

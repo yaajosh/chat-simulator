@@ -40,13 +40,14 @@ body {
 .video-placeholder {
     background: linear-gradient(135deg, #1f1f23 0%, #18181b 100%);
     border-radius: 8px;
-    height: 400px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     border: 1px solid #2d2d31;
+    min-height: 400px;
 }
 
 .live-indicator {
@@ -136,14 +137,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 20px 24px;
     background: linear-gradient(135deg, #9147ff 0%, #772ce8 100%);
     border-radius: 8px;
-    margin-bottom: 20px;
 }
 
 .top-bar .logo h1 {
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 700;
     color: white;
     margin: 0;
 }
@@ -175,25 +176,12 @@ body {
     border-color: white;
 }
 
-.practice-header {
-    background: linear-gradient(135deg, #9147ff 0%, #772ce8 100%);
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.practice-header p {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-}
 
 .session-controls {
     display: flex;
     gap: 12px;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .session-button {
@@ -271,26 +259,23 @@ body {
     color: #adadb8;
 }
 
-.stream-info {
-    background-color: #18181b;
-    padding: 15px;
+.tips-section {
+    background-color: rgba(145, 71, 255, 0.1);
+    border: 1px solid rgba(145, 71, 255, 0.3);
     border-radius: 8px;
-    border: 1px solid #2d2d31;
-    flex-shrink: 0;
+    padding: 16px;
+    margin-bottom: 20px;
 }
 
-.stream-info h2 {
-    font-size: 16px;
+.tips-section h3 {
+    font-size: 15px;
     margin-bottom: 12px;
+    color: #efeff1;
 }
 
-.stream-info h3 {
-    font-size: 14px;
-}
-
-.stream-info p {
+.tips-section h4 {
     font-size: 13px;
-    color: #adadb8;
+    color: #efeff1;
 }
 
 .tips-list {
@@ -300,10 +285,10 @@ body {
 }
 
 .tips-list li {
-    padding: 8px 0;
-    padding-left: 24px;
+    padding: 6px 0;
+    padding-left: 20px;
     position: relative;
-    font-size: 13px;
+    font-size: 12px;
     color: #adadb8;
     line-height: 1.5;
 }
@@ -312,8 +297,19 @@ body {
     content: "✓";
     position: absolute;
     left: 0;
-    color: #00b894;
+    color: #9147ff;
     font-weight: bold;
+    font-size: 14px;
+}
+
+.tips-list-small li {
+    font-size: 11px;
+    padding: 4px 0;
+    padding-left: 16px;
+}
+
+.tips-list-small li:before {
+    font-size: 12px;
 }
 
 .chat-section {
@@ -468,8 +464,9 @@ body {
 }
 
 .settings-panel h3 {
-    font-size: 16px;
-    margin-bottom: 20px;
+    font-size: 15px;
+    margin-bottom: 16px;
+    color: #efeff1;
 }
 
 .setting-group {
