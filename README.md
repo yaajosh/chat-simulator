@@ -113,3 +113,4 @@ Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Cha
 MIT License - Frei verwendbar für persönliche und kommerzielle Zwecke
 
 # chat-simulator
+# chat-simulator
