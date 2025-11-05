@@ -83,16 +83,6 @@ class App {
                 this.chatSimulator.setAutoResponse(e.target.checked);
             }
         });
-        
-        document.getElementById('language').addEventListener('change', (e) => {
-            if (this.chatSimulator) {
-                this.chatSimulator.setLanguage(e.target.value);
-            }
-            if (this.speechHandler) {
-                this.speechHandler.setLanguage(e.target.value);
-            }
-            localStorage.setItem('chat-sim-language', e.target.value);
-        });
     }
     
     loadSettings() {
