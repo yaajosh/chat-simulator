@@ -161,16 +161,6 @@ export class ChatSimulator {
         }
     }
     
-    generateChatterToChatterMessage() {
-        const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
-        const recentMessages = this.conversationHistory.slice(-3);
-        
-        if (recentMessages.length === 0) return;
-        
-        const prompt = this.buildChatterInteractionPrompt(chatter, recentMessages);
-        this.queueAPICall(prompt, chatter);
-    }
-    
     generateStreamerQuestion() {
         const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
         const prompt = this.buildStreamerQuestionPrompt(chatter);
@@ -229,76 +219,41 @@ export class ChatSimulator {
         const prompts = {
             de: `Du bist ${chatter.username}, ein casual Twitch-Zuschauer.
 
-Schreibe eine kurze, lockere Bemerkung oder Frage (max. 60 Zeichen).
+Schreibe eine kurze, lockere Bemerkung (max. 50 Zeichen).
 
-Themen: Gaming, Technik, was auch immer gerade interessant ist.
-Sei entspannt und freundlich.
+REGELN:
+- Sprich DIREKT über den Stream oder das was passiert
+- KEINE @mentions zu anderen Chattern!
+- KEINE Bezüge auf alte Nachrichten!
+- Sei einfach ein normaler Zuschauer der kommentiert
+
 Verwende manchmal ein Emote: PogChamp, Kappa, LUL
 
-WICHTIG: Beziehe dich NICHT auf alte Themen! Sei frisch und aktuell.
-
 Beispiele:
-- "Läuft gut hier!"
-- "Was kommt als nächstes?"
+- "Läuft gut!"
+- "Interessant!"
 - "Cool! PogChamp"
+- "Nice!"
 
 Nachricht:`,
             
             en: `You are ${chatter.username}, a casual Twitch viewer.
 
-Write a short, relaxed remark or question (max 60 characters).
+Write a short, relaxed remark (max 50 characters).
 
-Topics: Gaming, tech, whatever seems interesting.
-Be chill and friendly.
+RULES:
+- Talk DIRECTLY about the stream or what's happening
+- NO @mentions to other chatters!
+- NO references to old messages!
+- Just be a normal viewer commenting
+
 Sometimes use an emote: PogChamp, Kappa, LUL
 
-IMPORTANT: Do NOT reference old topics! Be fresh and current.
-
 Examples:
-- "Going well here!"
-- "What's next?"
+- "Going well!"
+- "Interesting!"
 - "Cool! PogChamp"
-
-Message:`
-        };
-        
-        return prompts[this.language];
-    }
-    
-    buildChatterInteractionPrompt(chatter, recentMessages) {
-        // Only use the LAST message for interaction
-        const lastMessage = recentMessages[recentMessages.length - 1];
-        
-        const prompts = {
-            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
-
-Ein ANDERER ZUSCHAUER (nicht der Streamer!) hat geschrieben:
-${lastMessage}
-
-WICHTIG: Dies ist ein ANDERER ZUSCHAUER im Chat, NICHT der Streamer!
-
-Reagiere KURZ darauf (max. 50 Zeichen). Verwende @username.
-
-Beispiele:
-- "@Max genau!"
-- "@Luna true"
-- "@Tech stimmt Kappa"
-
-Nachricht:`,
-            
-            en: `You are ${chatter.username}, a relaxed Twitch viewer.
-
-ANOTHER VIEWER (not the streamer!) wrote:
-${lastMessage}
-
-IMPORTANT: This is ANOTHER VIEWER in chat, NOT the streamer!
-
-React BRIEFLY to it (max 50 characters). Use @username.
-
-Examples:
-- "@Max exactly!"
-- "@Luna true"
-- "@Tech yup Kappa"
+- "Nice!"
 
 Message:`
         };
@@ -310,35 +265,37 @@ Message:`
         const prompts = {
             de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
 
-Stelle dem STREAMER (der Person die den Stream macht, nicht anderen Chattern!) eine einfache, kurze Frage (max. 60 Zeichen).
+Stelle dem STREAMER eine einfache, kurze Frage (max. 50 Zeichen).
 
-WICHTIG: 
-- Frage den STREAMER, nicht andere Zuschauer!
-- Erfinde eine NEUE Frage, beziehe dich NICHT auf alte Themen!
-
-Sei freundlich und interessiert.
+REGELN:
+- Frage NUR den STREAMER, nicht andere Chatter!
+- KEINE @mentions zu anderen Zuschauern!
+- KEINE alten Themen erwähnen!
+- Frische, neue Frage!
 
 Beispiele:
 - "Was machst du da?"
 - "Wie geht's?"
-- "Zeigst du uns was Neues?"
+- "Was zeigst du uns?"
+- "Hast du Tipps?"
 
 Frage:`,
             
             en: `You are ${chatter.username}, a relaxed Twitch viewer.
 
-Ask the STREAMER (the person doing the stream, not other chatters!) a simple, short question (max 60 characters).
+Ask the STREAMER a simple, short question (max 50 characters).
 
-IMPORTANT:
-- Ask the STREAMER, not other viewers!
-- Come up with a NEW question, do NOT reference old topics!
-
-Be friendly and interested.
+RULES:
+- Ask ONLY the STREAMER, not other chatters!
+- NO @mentions to other viewers!
+- NO old topics!
+- Fresh, new question!
 
 Examples:
 - "What are you doing?"
 - "How's it going?"
-- "Showing us something new?"
+- "What are you showing us?"
+- "Got any tips?"
 
 Question:`
         };
