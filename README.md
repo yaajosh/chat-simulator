@@ -1,14 +1,16 @@
-# Twitch Chat Simulator
+# Stream-Präsentations-Trainer
 
-Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Chattern, die durch Gemini 2.5 Flash angetrieben werden.
+Ein professionelles Übungstool für Praktikanten und angehende Streamer, um sicheres Sprechen vor der Kamera zu trainieren. Simuliert einen Twitch-Livestream-Chat mit KI-generierten Chattern, angetrieben durch Gemini 2.5 Flash Lite.
 
 ## Features
 
+- 🎓 **Lerntool für Praktikanten** - Strukturierte Übungssessions mit Timer
 - 🎮 **Authentisches Twitch-Chat Design** - Sieht aus wie ein echter Twitch-Stream
-- 🤖 **KI-generierte Chatter** - Gemini 2.5 Flash erstellt realistische Chat-Nachrichten
+- 🤖 **KI-generierte Chatter** - Gemini 2.5 Flash Lite erstellt realistische Chat-Nachrichten
 - 🎤 **Mikrofon-Integration** - Spreche in dein Mikrofon und die KI-Chatter reagieren auf das Gesagte
+- ⏱️ **Session-Timer** - Verfolge die Dauer deiner Übungseinheiten
 - 🌍 **Mehrsprachig** - Unterstützt Deutsch und Englisch
-- ⚙️ **Anpassbare Chat-Aktivität** - Stelle ein, wie aktiv der Chat sein soll
+- ⚙️ **Anpassbare Chat-Aktivität** - Simuliere wenige oder viele Zuschauer
 - 👥 **Verschiedene Persönlichkeiten** - Chatter mit unterschiedlichen Charakteren
 
 ## Installation & Start
@@ -39,17 +41,22 @@ Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Cha
 
 ## Verwendung
 
-### Chat-Simulation starten
-- Der Chat startet automatisch nach Eingabe des API Keys
-- Stelle die Chat-Aktivität (1-10) ein, um zu kontrollieren, wie häufig Nachrichten erscheinen
-- Pausiere den Chat mit dem Pause-Button
-- Lösche alle Nachrichten mit dem Papierkorb-Button
+### Übungssession starten
+1. **"Übungssession starten"** klicken
+2. Der Timer startet automatisch und zeigt die Übungsdauer an
+3. Die "ÜBUNG LÄUFT" Anzeige erscheint
+4. Der simulierte Chat wird aktiviert
 
 ### Mikrofon verwenden
-1. Klicke auf "Mikrofon aktivieren"
+1. Klicke auf **"Mikrofon aktivieren"** (nur während aktiver Session)
 2. Erlaube den Mikrofon-Zugriff im Browser
 3. Spreche ins Mikrofon - deine Worte werden transkribiert
-4. Die KI-Chatter reagieren automatisch auf das Gesagte (wenn aktiviert)
+4. Die KI-Chatter reagieren automatisch auf komplette Sätze (wenn aktiviert)
+
+### Session beenden
+- Klicke auf **"Session beenden"**
+- Du erhältst eine Zusammenfassung mit der Übungsdauer
+- Alle Daten werden für die nächste Session zurückgesetzt
 
 ### Eigene Nachrichten senden
 - Schreibe eine Nachricht im Chat-Input-Feld
@@ -58,15 +65,15 @@ Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Cha
 
 ## Einstellungen
 
-- **Gemini API Key**: Dein API-Schlüssel für die Gemini AI
-- **Chat-Aktivität**: Wie häufig Nachrichten generiert werden (1 = selten, 10 = sehr aktiv)
-- **Automatische Antworten auf Sprache**: An/Aus für Sprach-Reaktionen
-- **Sprache**: Deutsch oder Englisch
+- **Gemini API Key**: Dein API-Schlüssel für Gemini 2.5 Flash Lite
+- **Chat-Aktivität (Zuschauer-Anzahl)**: Simuliert unterschiedliche Zuschauerzahlen (1 = wenige Zuschauer, 10 = sehr aktiver Chat)
+- **Chat reagiert auf deine Sprache**: An/Aus für automatische Reaktionen auf Mikrofon-Input
+- **Sprache**: Deutsch oder Englisch (beeinflusst Chat-Nachrichten und Spracherkennung)
 
 ## Technologie
 
 - **Frontend**: Vanilla JavaScript (ES6 Modules)
-- **KI**: Google Gemini 2.0 Flash API
+- **KI**: Google Gemini 2.5 Flash Lite API
 - **Spracherkennung**: Web Speech API
 - **Styling**: Custom CSS (Twitch-inspiriert)
 
@@ -85,12 +92,21 @@ Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Cha
 - Keine Datenbank oder Backend-Speicherung
 - Spracheingaben werden über die Web Speech API verarbeitet
 
-## Tipps für die Verwendung
+## Tipps für Praktikanten
 
-1. **Übe deine Stream-Präsentation** - Sprich so, als würdest du wirklich streamen
-2. **Reagiere auf Chat** - Die KI-Chatter stellen Fragen und machen Kommentare
-3. **Verschiedene Szenarien** - Teste verschiedene Themen und Situationen
-4. **Chat-Aktivität anpassen** - Beginne mit weniger Aktivität und steigere sie graduell
+1. **Starte mit kurzen Sessions** - Beginne mit 5-10 Minuten und steigere dich
+2. **Übe deine Stream-Präsentation** - Sprich so, als würdest du wirklich streamen
+3. **Reagiere auf Chat** - Die KI-Chatter stellen Fragen und machen Kommentare - beantworte sie!
+4. **Verschiedene Szenarien** - Teste verschiedene Themen und Präsentationsstile
+5. **Chat-Aktivität anpassen** - Beginne mit weniger Aktivität (Level 2-3) und steigere graduell
+6. **Regelmäßig üben** - Tägliche kurze Sessions sind effektiver als lange seltene Übungen
+
+## Vorteile von Gemini 2.5 Flash Lite
+
+- ⚡ **Schnelle Antworten** - Minimale Latenz für realistische Chat-Interaktion
+- 💰 **Kosteneffizient** - Günstiger als Standard-Modelle
+- 🎯 **Optimiert für Chat** - Speziell für kurze, prägnante Nachrichten
+- 📊 **Bessere Rate Limits** - Mehr Anfragen möglich = aktiverer Chat
 
 ## Troubleshooting
 
@@ -106,12 +122,23 @@ Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Cha
 
 **API-Fehler:**
 - Prüfe ob dein API Key noch gültig ist
-- Google AI Studio hat möglicherweise Rate Limits
+- Bei Rate-Limit-Fehlern: Reduziere die Chat-Aktivität oder warte kurz
+- Gemini 2.5 Flash Lite hat großzügige Rate Limits
+
+**Session startet nicht:**
+- Stelle sicher, dass der API Key eingegeben ist
+- Lade die Seite neu und versuche es erneut
+
+## Für Ausbilder / Trainer
+
+Dieses Tool eignet sich hervorragend für:
+- **Praktikanten-Training** - Vorbereitung auf Live-Präsentationen
+- **Streaming-Workshops** - Übung für angehende Content-Creator  
+- **Präsentations-Coaching** - Sicheres Sprechen vor Publikum trainieren
+- **Remote-Training** - Jeder kann von zu Hause aus üben
+
+Die Session-Timer und strukturierten Übungseinheiten ermöglichen messbare Fortschritte.
 
 ## Lizenz
 
 MIT License - Frei verwendbar für persönliche und kommerzielle Zwecke
-
-# chat-simulator
-# chat-simulator
-# chat-simulator

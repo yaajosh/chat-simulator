@@ -1,7 +1,7 @@
 {
   "name": "twitch-chat-simulator",
   "version": "1.0.0",
-  "description": "A Twitch livestream chat simulator with Gemini AI integration for practice streaming",
+  "description": "A Twitch livestream chat simulator with Gemini 2.5 Flash Lite AI integration for practice streaming",
   "main": "app.js",
   "type": "module",
   "scripts": {
