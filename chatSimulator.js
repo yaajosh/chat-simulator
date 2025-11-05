@@ -132,16 +132,8 @@ export class ChatSimulator {
     }
     
     sendWelcomeMessages() {
-        const welcomes = this.language === 'de' 
-            ? ['Hey! 👋', 'Moin!', 'Hallo zusammen!']
-            : ['Hey! 👋', 'Hello!', 'Hi everyone!'];
-        
-        setTimeout(() => {
-            this.sendMessage(
-                this.chatters[0],
-                welcomes[Math.floor(Math.random() * welcomes.length)]
-            );
-        }, 1000);
+        // Disabled: Welcome messages caused chatters to respond to each other
+        // Now chat starts clean and waits for streamer input
     }
     
     async generateRandomMessage() {
@@ -217,43 +209,61 @@ export class ChatSimulator {
     
     buildRandomMessagePrompt(chatter) {
         const prompts = {
-            de: `Du bist ${chatter.username}, ein casual Twitch-Zuschauer.
+            de: `Du bist ${chatter.username}, ein Twitch-Zuschauer.
 
-Schreibe eine kurze, lockere Bemerkung (max. 50 Zeichen).
+Schreibe EINE kurze Bemerkung über den Stream (max. 40 Zeichen).
 
-REGELN:
-- Sprich DIREKT über den Stream oder das was passiert
-- KEINE @mentions zu anderen Chattern!
-- KEINE Bezüge auf alte Nachrichten!
-- Sei einfach ein normaler Zuschauer der kommentiert
+STRENGE REGELN:
+- Sprich NUR über den aktuellen Stream
+- ABSOLUT KEINE anderen Chatter erwähnen oder ansprechen!
+- KEINE Namen von anderen Zuschauern!
+- KEINE @mentions!
+- KEINE Fragen an andere Chatter!
+- NUR Kommentare zum Stream selbst
 
-Verwende manchmal ein Emote: PogChamp, Kappa, LUL
+Manchmal ein Emote: PogChamp, Kappa, LUL
 
-Beispiele:
-- "Läuft gut!"
+Gute Beispiele:
+- "Läuft smooth!"
+- "Geile Sache!"
+- "Spannend! PogChamp"
+- "Nice Stream!"
+- "Gut erklärt!"
 - "Interessant!"
-- "Cool! PogChamp"
-- "Nice!"
+
+VERBOTEN:
+- "@Max..." (NIEMALS!)
+- "Luna hat Recht..." (NIEMALS!)
+- Jede Erwähnung anderer Chatter
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a casual Twitch viewer.
+            en: `You are ${chatter.username}, a Twitch viewer.
 
-Write a short, relaxed remark (max 50 characters).
+Write ONE short remark about the stream (max 40 characters).
 
-RULES:
-- Talk DIRECTLY about the stream or what's happening
-- NO @mentions to other chatters!
-- NO references to old messages!
-- Just be a normal viewer commenting
+STRICT RULES:
+- Talk ONLY about the current stream
+- ABSOLUTELY NO mentioning or addressing other chatters!
+- NO names of other viewers!
+- NO @mentions!
+- NO questions to other chatters!
+- ONLY comments about the stream itself
 
-Sometimes use an emote: PogChamp, Kappa, LUL
+Sometimes an emote: PogChamp, Kappa, LUL
 
-Examples:
-- "Going well!"
+Good examples:
+- "Running smooth!"
+- "Great stuff!"
+- "Exciting! PogChamp"
+- "Nice stream!"
+- "Well explained!"
 - "Interesting!"
-- "Cool! PogChamp"
-- "Nice!"
+
+FORBIDDEN:
+- "@Max..." (NEVER!)
+- "Luna is right..." (NEVER!)
+- Any mention of other chatters
 
 Message:`
         };
@@ -263,39 +273,59 @@ Message:`
     
     buildStreamerQuestionPrompt(chatter) {
         const prompts = {
-            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
+            de: `Du bist ${chatter.username}, ein Twitch-Zuschauer.
 
-Stelle dem STREAMER eine einfache, kurze Frage (max. 50 Zeichen).
+Stelle dem STREAMER eine kurze Frage (max. 40 Zeichen).
 
-REGELN:
-- Frage NUR den STREAMER, nicht andere Chatter!
-- KEINE @mentions zu anderen Zuschauern!
-- KEINE alten Themen erwähnen!
-- Frische, neue Frage!
+STRENGE REGELN:
+- Frage NUR den STREAMER!
+- KEINE Namen anderer Chatter erwähnen!
+- KEINE @mentions!
+- Komplett neue, frische Frage!
 
-Beispiele:
+Viele verschiedene Beispiele:
 - "Was machst du da?"
-- "Wie geht's?"
-- "Was zeigst du uns?"
-- "Hast du Tipps?"
+- "Wie funktioniert das?"
+- "Zeigst du mehr davon?"
+- "Welches Tool nutzt du?"
+- "Wie lange schon?"
+- "Was kommt noch?"
+- "Macht das Spaß?"
+- "Kannst du XY zeigen?"
+- "Wo hast du das gelernt?"
+- "Hast du Tipps für uns?"
+- "Was ist dein Favorit?"
+- "Wie geht's dir?"
+
+Wähle eine UNTERSCHIEDLICHE Frage aus oder erfinde eine neue!
 
 Frage:`,
             
-            en: `You are ${chatter.username}, a relaxed Twitch viewer.
+            en: `You are ${chatter.username}, a Twitch viewer.
 
-Ask the STREAMER a simple, short question (max 50 characters).
+Ask the STREAMER a short question (max 40 characters).
 
-RULES:
-- Ask ONLY the STREAMER, not other chatters!
-- NO @mentions to other viewers!
-- NO old topics!
-- Fresh, new question!
+STRICT RULES:
+- Ask ONLY the STREAMER!
+- NO names of other chatters!
+- NO @mentions!
+- Completely new, fresh question!
 
-Examples:
+Many different examples:
 - "What are you doing?"
-- "How's it going?"
-- "What are you showing us?"
-- "Got any tips?"
+- "How does that work?"
+- "Will you show more?"
+- "Which tool are you using?"
+- "How long have you been at this?"
+- "What's coming next?"
+- "Is this fun?"
+- "Can you show XY?"
+- "Where did you learn this?"
+- "Got tips for us?"
+- "What's your favorite?"
+- "How are you doing?"
+
+Choose a DIFFERENT question or invent a new one!
 
 Question:`
         };
@@ -442,39 +472,57 @@ Question:`
     
     buildDirectResponsePrompt(chatter, transcript) {
         const prompts = {
-            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
+            de: `Du bist ${chatter.username}, ein Twitch-Zuschauer.
 
-Der STREAMER (die Person die den Stream macht!) hat DICH direkt angesprochen: "${transcript}"
+Der STREAMER hat DICH angesprochen: "${transcript}"
 
-WICHTIG: Der STREAMER spricht mit DIR, nicht ein anderer Zuschauer!
+Antworte direkt (max. 40 Zeichen).
 
-Antworte casual und direkt (max. 60 Zeichen).
+VERBOTEN:
+- Andere Chatter erwähnen
+- @mentions
+- Namen von Zuschauern
 
-Sei freundlich und locker.
-
-Beispiele:
+Verschiedene Antwort-Beispiele:
 - "Ja klar!"
-- "Danke! Freut mich"
-- "Haha, gute Frage"
+- "Danke dir!"
+- "Haha, stimmt!"
+- "Gerne!"
+- "Kein Problem!"
+- "Alles gut!"
 - "Ja genau!"
+- "Freut mich!"
+- "Logo!"
+- "Sicher!"
+
+Wähle eine passende Antwort!
 
 Antwort:`,
             
-            en: `You are ${chatter.username}, a relaxed Twitch viewer.
+            en: `You are ${chatter.username}, a Twitch viewer.
 
-The STREAMER (the person doing the stream!) addressed YOU directly: "${transcript}"
+The STREAMER addressed YOU: "${transcript}"
 
-IMPORTANT: The STREAMER is talking to YOU, not another viewer!
+Respond directly (max 40 characters).
 
-Respond casually and directly (max 60 characters).
+FORBIDDEN:
+- Mentioning other chatters
+- @mentions
+- Names of viewers
 
-Be friendly and chill.
-
-Examples:
+Different response examples:
 - "Yeah sure!"
-- "Thanks! Appreciate it"
-- "Haha, good question"
+- "Thanks!"
+- "Haha, right!"
+- "You're welcome!"
+- "No problem!"
+- "All good!"
 - "Yeah exactly!"
+- "Appreciate it!"
+- "For sure!"
+- "Definitely!"
+
+Choose a fitting response!
 
 Response:`
         };
@@ -484,39 +532,61 @@ Response:`
     
     buildResponsePrompt(chatter, transcript) {
         const prompts = {
-            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
+            de: `Du bist ${chatter.username}, ein Twitch-Zuschauer.
 
-Der STREAMER (nicht ein anderer Chatter!) hat gerade gesagt: "${transcript}"
+Der STREAMER hat gesagt: "${transcript}"
 
-WICHTIG: Das ist der STREAMER der den Stream macht, nicht ein anderer Zuschauer!
+WICHTIG: Das ist der STREAMER, nicht ein anderer Zuschauer!
 
-Reagiere casual auf das was DER STREAMER gesagt hat (max. 60 Zeichen).
+Reagiere auf DEN STREAMER (max. 40 Zeichen).
 
-Sei locker und freundlich.
-Manchmal ein Emote verwenden (PogChamp, Kappa, LUL).
+STRENG VERBOTEN:
+- Andere Chatter erwähnen
+- @mentions verwenden
+- Namen anderer Zuschauer sagen
 
-Beispiele:
-- "Cool! Mach weiter so"
-- "Interessant, erzähl mehr"
-- "Nice! PogChamp"
+Viele verschiedene Antwort-Beispiele:
+- "Verstehe!"
+- "Gut erklärt!"
+- "Ah ok, cool!"
+- "Macht Sinn!"
+- "Sehr nice!"
+- "Spannend!"
+- "Danke für Info!"
+- "Weiter so! PogChamp"
+- "Interessant!"
+- "Haha, nice!"
+
+Wähle eine passende Reaktion oder erfinde eine neue!
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a relaxed Twitch viewer.
+            en: `You are ${chatter.username}, a Twitch viewer.
 
-The STREAMER (not another chatter!) just said: "${transcript}"
+The STREAMER said: "${transcript}"
 
-IMPORTANT: This is the STREAMER doing the stream, not another viewer!
+IMPORTANT: This is the STREAMER, not another viewer!
 
-React casually to what THE STREAMER said (max 60 characters).
+React to THE STREAMER (max 40 characters).
 
-Be chill and friendly.
-Sometimes use an emote (PogChamp, Kappa, LUL).
+STRICTLY FORBIDDEN:
+- Mentioning other chatters
+- Using @mentions
+- Saying names of other viewers
 
-Examples:
-- "Cool! Keep going"
-- "Interesting, tell more"
-- "Nice! PogChamp"
+Many different response examples:
+- "Got it!"
+- "Well explained!"
+- "Ah ok, cool!"
+- "Makes sense!"
+- "Very nice!"
+- "Interesting!"
+- "Thanks for info!"
+- "Keep going! PogChamp"
+- "Nice!"
+- "Haha, cool!"
+
+Choose a fitting reaction or invent a new one!
 
 Message:`
         };
@@ -580,9 +650,9 @@ Message:`
                         }]
                     }],
                     generationConfig: {
-                        temperature: 0.9,
-                        maxOutputTokens: 100,
-                        topP: 0.95,
+                        temperature: 0.7,
+                        maxOutputTokens: 60,
+                        topP: 0.8,
                     }
                 })
             });
