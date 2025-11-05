@@ -234,6 +234,7 @@ class App {
             // Only respond to complete sentences
             this.speechHandler.onFinalTranscript((text) => {
                 if (this.chatSimulator && document.getElementById('autoResponse').checked) {
+                    console.log('Responding to speech:', text); // Debug log
                     this.chatSimulator.respondToSpeech(text);
                 }
             });

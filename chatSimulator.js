@@ -252,16 +252,22 @@ Message:`
     }
     
     buildResponsePrompt(chatter, transcript) {
+        // Get only the last 3 messages from chat for minimal context
+        const recentContext = this.conversationHistory.slice(-3).join('\n');
+        
         const prompts = {
-            de: `Du bist ${chatter.username}, ein Twitch-Chat-Nutzer.
-Der Streamer hat gerade gesagt: "${transcript}"
+            de: `Du bist ${chatter.username}, ein Twitch-Chat-Nutzer mit einer ${chatter.personality} Persönlichkeit.
 
-Generiere eine passende, kurze Reaktion (max. 100 Zeichen).
-Die Reaktion sollte ${chatter.personality} sein.
+Der Streamer hat GERADE EBEN gesagt: "${transcript}"
+
+${recentContext ? `Kurzer Chat-Kontext:\n${recentContext}\n` : ''}
+Generiere eine passende, kurze Reaktion auf das was der Streamer GERADE GESAGT HAT (max. 100 Zeichen).
+
+Wichtig: Reagiere NUR auf die aktuelle Aussage, nicht auf alte Themen!
 
 Mögliche Reaktionen:
-- Stelle eine Frage zum Gesagten
-- Kommentiere das Gesagte
+- Stelle eine Frage zum gerade Gesagten
+- Kommentiere die aktuelle Aussage
 - Zeige Zustimmung oder stelle es in Frage
 - Bringe verwandte Themen ein
 
@@ -269,15 +275,18 @@ Schreibe nur die Chat-Nachricht, keine Erklärungen.
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a Twitch chat user.
-The streamer just said: "${transcript}"
+            en: `You are ${chatter.username}, a Twitch chat user with a ${chatter.personality} personality.
 
-Generate an appropriate, short response (max 100 characters).
-The response should be ${chatter.personality}.
+The streamer JUST said: "${transcript}"
+
+${recentContext ? `Brief chat context:\n${recentContext}\n` : ''}
+Generate an appropriate, short response to what the streamer JUST SAID (max 100 characters).
+
+Important: React ONLY to the current statement, not old topics!
 
 Possible reactions:
-- Ask a question about what was said
-- Comment on it
+- Ask a question about what was just said
+- Comment on the current statement
 - Show agreement or question it
 - Bring up related topics
 
@@ -316,8 +325,8 @@ Message:`
         
         this.conversationHistory.push(`${chatter.username}: ${text}`);
         
-        // Keep only last 50 messages in history
-        if (this.conversationHistory.length > 50) {
+        // Keep only last 10 messages in history for better recency
+        if (this.conversationHistory.length > 10) {
             this.conversationHistory.shift();
         }
         

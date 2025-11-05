@@ -40,16 +40,26 @@ export class SpeechRecognitionHandler {
                 }
             }
             
-            // Show interim results in UI
-            const displayText = finalTranscript || interimTranscript;
-            if (displayText && this.transcriptCallback) {
-                this.transcriptCallback(displayText.trim());
+            // Accumulate for display
+            if (finalTranscript.trim()) {
+                this.currentTranscript += finalTranscript;
             }
             
-            // Only trigger AI responses on final results
+            // Show current accumulated + interim in UI
+            const displayText = (this.currentTranscript + ' ' + interimTranscript).trim();
+            if (displayText && this.transcriptCallback) {
+                this.transcriptCallback(displayText);
+            }
+            
+            // Only trigger AI responses on final results with ONLY the new sentence
             if (finalTranscript.trim() && this.finalTranscriptCallback) {
-                this.currentTranscript += finalTranscript;
-                this.finalTranscriptCallback(this.currentTranscript.trim());
+                // Send only the NEW sentence, not the accumulated transcript
+                this.finalTranscriptCallback(finalTranscript.trim());
+                
+                // Clear transcript after a short delay to prepare for next input
+                setTimeout(() => {
+                    this.currentTranscript = '';
+                }, 5000); // Clear after 5 seconds
             }
         };
         
