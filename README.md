@@ -1,6 +1,6 @@
 # Twitch Chat Simulator
 
-Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Chattern, die durch Gemini 2.0 Flash angetrieben werden.
+Eine Web-App zum Simulieren eines Twitch-Livestream-Chats mit KI-generierten Chattern, die durch Gemini 2.5 Flash angetrieben werden.
 
 ## Features
 
