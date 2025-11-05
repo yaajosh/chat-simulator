@@ -142,11 +142,11 @@ export class ChatSimulator {
         // Decide what type of message to generate
         const messageType = Math.random();
         
-        if (messageType < 0.7) {
-            // 70% chance: Ask streamer a question (main focus on streamer)
+        if (messageType < 0.3) {
+            // 30% chance: Ask streamer a question
             this.generateStreamerQuestion();
         } else {
-            // 30% chance: Random observation/comment
+            // 70% chance: Random observation/comment/reaction
             const chatter = this.chatters[Math.floor(Math.random() * this.chatters.length)];
             const prompt = this.buildRandomMessagePrompt(chatter);
             this.queueAPICall(prompt, chatter);
@@ -211,59 +211,74 @@ export class ChatSimulator {
         const prompts = {
             de: `Du bist ${chatter.username}, ein Twitch-Zuschauer.
 
-Schreibe EINE kurze Bemerkung über den Stream (max. 40 Zeichen).
-
-STRENGE REGELN:
-- Sprich NUR über den aktuellen Stream
-- ABSOLUT KEINE anderen Chatter erwähnen oder ansprechen!
-- KEINE Namen von anderen Zuschauern!
-- KEINE @mentions!
-- KEINE Fragen an andere Chatter!
-- NUR Kommentare zum Stream selbst
-
-Manchmal ein Emote: PogChamp, Kappa, LUL
-
-Gute Beispiele:
-- "Läuft smooth!"
-- "Geile Sache!"
-- "Spannend! PogChamp"
-- "Nice Stream!"
-- "Gut erklärt!"
-- "Interessant!"
+Schreibe eine kurze, natürliche Reaktion (max. 35 Zeichen).
 
 VERBOTEN:
-- "@Max..." (NIEMALS!)
-- "Luna hat Recht..." (NIEMALS!)
-- Jede Erwähnung anderer Chatter
+- Andere Chatter erwähnen
+- @mentions
+- Fragen
+
+Viele verschiedene Möglichkeiten:
+POSITIVE REAKTIONEN:
+- "Nice!"
+- "Cool! PogChamp"
+- "Läuft!"
+- "Geht ab!"
+- "Stark!"
+- "Gefällt mir!"
+- "Top!"
+
+NEUTRALE KOMMENTARE:
+- "Ah ok"
+- "Verstehe"
+- "Macht Sinn"
+- "Interessant"
+- "Kappa"
+
+KURZE EMOTES/VIBES:
+- "LUL"
+- "PogChamp"
+- "Hype!"
+- "Chill Stream"
+- "Entspannt hier"
+
+Wähle was passendes oder erfinde was Neues!
 
 Nachricht:`,
             
             en: `You are ${chatter.username}, a Twitch viewer.
 
-Write ONE short remark about the stream (max 40 characters).
-
-STRICT RULES:
-- Talk ONLY about the current stream
-- ABSOLUTELY NO mentioning or addressing other chatters!
-- NO names of other viewers!
-- NO @mentions!
-- NO questions to other chatters!
-- ONLY comments about the stream itself
-
-Sometimes an emote: PogChamp, Kappa, LUL
-
-Good examples:
-- "Running smooth!"
-- "Great stuff!"
-- "Exciting! PogChamp"
-- "Nice stream!"
-- "Well explained!"
-- "Interesting!"
+Write a short, natural reaction (max 35 characters).
 
 FORBIDDEN:
-- "@Max..." (NEVER!)
-- "Luna is right..." (NEVER!)
-- Any mention of other chatters
+- Mentioning other chatters
+- @mentions
+- Questions
+
+Many different options:
+POSITIVE REACTIONS:
+- "Nice!"
+- "Cool! PogChamp"
+- "Great!"
+- "Awesome!"
+- "Love it!"
+- "Top!"
+
+NEUTRAL COMMENTS:
+- "Ah ok"
+- "Got it"
+- "Makes sense"
+- "Interesting"
+- "Kappa"
+
+SHORT EMOTES/VIBES:
+- "LUL"
+- "PogChamp"
+- "Hype!"
+- "Chill stream"
+- "Relaxing here"
+
+Choose something fitting or invent something new!
 
 Message:`
         };
