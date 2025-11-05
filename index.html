@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream-Präsentations-Trainer | Übungstool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="video-section">
+                <div class="practice-header">
+                    <h1>🎓 Stream-Präsentations-Trainer</h1>
+                    <p>Übungstool für Praktikanten - Lerne sicher vor der Kamera zu sprechen</p>
+                </div>
+                
+                <div class="session-controls">
+                    <button id="startSessionButton" class="session-button start-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Übungssession starten
+                    </button>
+                    <button id="stopSessionButton" class="session-button stop-button" style="display: none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="6" width="12" height="12"></rect>
+                        </svg>
+                        Session beenden
+                    </button>
+                    <div id="sessionTimer" class="session-timer" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span id="timerDisplay">00:00</span>
+                    </div>
+                </div>
+                
+                <div class="video-placeholder" id="practiceArea">
+                    <div class="live-indicator" id="liveIndicator" style="display: none;">
+                        <span class="live-dot"></span>
+                        ÜBUNG LÄUFT
+                    </div>
+                    <div class="practice-placeholder" id="practicePlaceholder">
+                        <div class="placeholder-content">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                            <h3>Bereit zum Üben?</h3>
+                            <p>Starte eine Session um mit dem Training zu beginnen</p>
+                        </div>
+                    </div>
+                    <div class="mic-controls" id="micControls" style="display: none;">
+                        <button id="micButton" class="mic-button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <span id="micStatus">Mikrofon aktivieren</span>
+                        </button>
+                        <div id="transcription" class="transcription"></div>
+                    </div>
+                </div>
+                <div class="stream-info">
+                    <h2>📋 Übungstipps</h2>
+                    <ul class="tips-list">
+                        <li>Sprich klar und deutlich in dein Mikrofon</li>
+                        <li>Beobachte die Chat-Reaktionen und reagiere darauf</li>
+                        <li>Beantworte Fragen aus dem Chat</li>
+                        <li>Übe verschiedene Präsentationsstile</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="chat-section">
+                <div class="chat-header">
+                    <h2>STREAM-CHAT</h2>
+                    <div class="chat-controls">
+                        <button id="pauseButton" class="control-button" title="Chat pausieren">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16"></rect>
+                                <rect x="14" y="4" width="4" height="16"></rect>
+                            </svg>
+                        </button>
+                        <button id="clearButton" class="control-button" title="Chat leeren">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="chatMessages" class="chat-messages"></div>
+                <div class="chat-input-container">
+                    <input 
+                        type="text" 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Nachricht senden..."
+                    >
+                    <button id="sendButton" class="send-button">Senden</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-panel">
+            <h3>⚙️ Einstellungen</h3>
+            <div class="setting-group">
+                <label for="apiKey">Gemini API Key:</label>
+                <input type="password" id="apiKey" placeholder="Dein Gemini API Key">
+                <small>Wird lokal im Browser gespeichert</small>
+            </div>
+            <div class="setting-group">
+                <label for="chatActivity">Chat-Aktivität (Zuschauer-Anzahl):</label>
+                <input type="range" id="chatActivity" min="1" max="10" value="4">
+                <span id="activityValue">4</span>
+                <small>1 = Wenige Zuschauer, 10 = Sehr aktiver Chat</small>
+            </div>
+            <div class="setting-group">
+                <label>
+                    <input type="checkbox" id="autoResponse" checked>
+                    Chat reagiert auf deine Sprache
+                </label>
+            </div>
+            <div class="setting-group">
+                <label for="language">Sprache:</label>
+                <select id="language">
+                    <option value="de">Deutsch</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            
+            <div class="info-box">
+                <h4>ℹ️ So funktioniert's</h4>
+                <ol>
+                    <li>API Key oben eingeben</li>
+                    <li>"Übungssession starten" klicken</li>
+                    <li>Mikrofon aktivieren</li>
+                    <li>Mit dem Üben beginnen!</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="app.js"></script>
+</body>
+</html>
+
