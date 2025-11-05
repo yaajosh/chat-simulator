@@ -72,9 +72,11 @@ class App {
         });
         
         document.getElementById('chatActivity').addEventListener('input', (e) => {
-            document.getElementById('activityValue').textContent = e.target.value;
+            const value = e.target.value;
+            document.getElementById('activityValue').textContent = value;
+            localStorage.setItem('chat-activity', value);
             if (this.chatSimulator) {
-                this.chatSimulator.setActivityLevel(parseInt(e.target.value));
+                this.chatSimulator.setActivityLevel(parseInt(value));
             }
         });
         
@@ -91,6 +93,11 @@ class App {
         if (apiKey) {
             document.getElementById('apiKey').value = apiKey;
         }
+        
+        // Load chat activity
+        const activityLevel = localStorage.getItem('chat-activity') || '4';
+        document.getElementById('chatActivity').value = activityLevel;
+        document.getElementById('activityValue').textContent = activityLevel;
         
         // Load and apply language
         const language = this.languageManager.getCurrentLanguage();
@@ -132,10 +139,16 @@ class App {
         const apiKey = localStorage.getItem('gemini-api-key');
         const language = this.languageManager.getCurrentLanguage();
         
+        console.log('Initializing ChatSimulator with language:', language); // Debug
+        
         this.chatSimulator = new ChatSimulator(apiKey, language);
         this.chatSimulator.onMessage((message) => {
             this.displayMessage(message);
         });
+        
+        // Set activity level from saved setting
+        const activityLevel = localStorage.getItem('chat-activity') || '4';
+        this.chatSimulator.setActivityLevel(parseInt(activityLevel));
         
         // Check if API key is set
         if (!apiKey) {
