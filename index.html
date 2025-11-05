@@ -7,12 +7,12 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Stream-Präsentations-Trainer | Übungstool</title>
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
     <div class="container">
-        <div class="main-content">
-            <div class="video-section">
+        <div class="top-row">
+            <div class="left-section">
                 <div class="practice-header">
                     <h1>🎓 <span data-i18n="app-title">Stream-Präsentations-Trainer</span></h1>
                     <p data-i18n="app-subtitle">Übe Live-Präsentationen mit KI-generiertem Chat-Feedback</p>
@@ -118,32 +118,34 @@
         
         <div class="settings-panel">
             <h3>⚙️ <span data-i18n="settings-title">Einstellungen</span></h3>
-            <div class="setting-group">
-                <label for="apiKey" data-i18n="api-key-label">Gemini API Key:</label>
-                <input type="password" id="apiKey" data-i18n-placeholder="api-key-placeholder" placeholder="Dein Gemini API Key">
-                <small data-i18n="api-key-info">Verwendet Gemini 2.5 Flash Lite • Wird lokal gespeichert</small>
-            </div>
-            <div class="setting-group">
-                <label for="chatActivity" data-i18n="chat-activity-label">Chat-Aktivität (Zuschauer-Anzahl):</label>
-                <input type="range" id="chatActivity" min="1" max="10" value="4">
-                <span id="activityValue">4</span>
-                <small data-i18n="chat-activity-info">1 = Wenige Zuschauer, 10 = Sehr aktiver Chat</small>
-            </div>
-            <div class="setting-group">
-                <label>
-                    <input type="checkbox" id="autoResponse" checked>
-                    <span data-i18n="auto-response-label">Chat reagiert auf deine Sprache</span>
-                </label>
-            </div>
-            
-            <div class="info-box">
-                <h4>ℹ️ <span data-i18n="how-it-works">So funktioniert's</span></h4>
-                <ol>
-                    <li data-i18n="step-1">API Key oben eingeben</li>
-                    <li data-i18n="step-2">"Übungssession starten" klicken</li>
-                    <li data-i18n="step-3">Mikrofon aktivieren</li>
-                    <li data-i18n="step-4">Mit dem Üben beginnen!</li>
-                </ol>
+            <div class="settings-content">
+                <div class="setting-group">
+                    <label for="apiKey" data-i18n="api-key-label">Gemini API Key:</label>
+                    <input type="password" id="apiKey" data-i18n-placeholder="api-key-placeholder" placeholder="Dein Gemini API Key">
+                    <small data-i18n="api-key-info">Verwendet Gemini 2.5 Flash Lite • Wird lokal gespeichert</small>
+                </div>
+                <div class="setting-group">
+                    <label for="chatActivity" data-i18n="chat-activity-label">Chat-Aktivität (Zuschauer-Anzahl):</label>
+                    <input type="range" id="chatActivity" min="1" max="10" value="4">
+                    <span id="activityValue">4</span>
+                    <small data-i18n="chat-activity-info">1 = Wenige Zuschauer, 10 = Sehr aktiver Chat</small>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="autoResponse" checked>
+                        <span data-i18n="auto-response-label">Chat reagiert auf deine Sprache</span>
+                    </label>
+                </div>
+                
+                <div class="info-box">
+                    <h4>ℹ️ <span data-i18n="how-it-works">So funktioniert's</span></h4>
+                    <ol>
+                        <li data-i18n="step-1">API Key oben eingeben</li>
+                        <li data-i18n="step-2">"Übungssession starten" klicken</li>
+                        <li data-i18n="step-3">Mikrofon aktivieren</li>
+                        <li data-i18n="step-4">Mit dem Üben beginnen!</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </div>
