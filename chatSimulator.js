@@ -279,34 +279,34 @@ Message:`
         const lastMessage = recentMessages[recentMessages.length - 1];
         
         const prompts = {
-            de: `Du bist ${chatter.username}, ein entspannter Twitch-Chatter.
+            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
 
-Letzte Nachricht im Chat:
+Ein ANDERER ZUSCHAUER (nicht der Streamer!) hat geschrieben:
 ${lastMessage}
+
+WICHTIG: Dies ist ein ANDERER ZUSCHAUER im Chat, NICHT der Streamer!
 
 Reagiere KURZ darauf (max. 50 Zeichen). Verwende @username.
 
-Halte es super kurz und casual!
-
 Beispiele:
 - "@Max genau!"
-- "@Luna true true"
+- "@Luna true"
 - "@Tech stimmt Kappa"
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a relaxed Twitch chatter.
+            en: `You are ${chatter.username}, a relaxed Twitch viewer.
 
-Last message in chat:
+ANOTHER VIEWER (not the streamer!) wrote:
 ${lastMessage}
+
+IMPORTANT: This is ANOTHER VIEWER in chat, NOT the streamer!
 
 React BRIEFLY to it (max 50 characters). Use @username.
 
-Keep it super short and casual!
-
 Examples:
 - "@Max exactly!"
-- "@Luna true true"
+- "@Luna true"
 - "@Tech yup Kappa"
 
 Message:`
@@ -319,9 +319,11 @@ Message:`
         const prompts = {
             de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
 
-Stelle dem Streamer eine einfache, kurze Frage (max. 60 Zeichen).
+Stelle dem STREAMER (der Person die den Stream macht, nicht anderen Chattern!) eine einfache, kurze Frage (max. 60 Zeichen).
 
-WICHTIG: Erfinde eine NEUE Frage, beziehe dich NICHT auf alte Themen!
+WICHTIG: 
+- Frage den STREAMER, nicht andere Zuschauer!
+- Erfinde eine NEUE Frage, beziehe dich NICHT auf alte Themen!
 
 Sei freundlich und interessiert.
 
@@ -329,16 +331,16 @@ Beispiele:
 - "Was machst du da?"
 - "Wie geht's?"
 - "Zeigst du uns was Neues?"
-- "Was ist dein Tipp dazu?"
-- "Magst du XY?"
 
 Frage:`,
             
             en: `You are ${chatter.username}, a relaxed Twitch viewer.
 
-Ask the streamer a simple, short question (max 60 characters).
+Ask the STREAMER (the person doing the stream, not other chatters!) a simple, short question (max 60 characters).
 
-IMPORTANT: Come up with a NEW question, do NOT reference old topics!
+IMPORTANT:
+- Ask the STREAMER, not other viewers!
+- Come up with a NEW question, do NOT reference old topics!
 
 Be friendly and interested.
 
@@ -346,8 +348,6 @@ Examples:
 - "What are you doing?"
 - "How's it going?"
 - "Showing us something new?"
-- "What's your tip on this?"
-- "Do you like XY?"
 
 Question:`
         };
@@ -359,6 +359,14 @@ Question:`
         if (!this.apiKey || !transcript) return;
         
         try {
+            // CLEAR ALL HISTORY before responding to new input
+            // This prevents chatters from referencing old topics
+            console.log(`🧹 Clearing conversation history for fresh response`);
+            this.conversationHistory = [];
+            
+            // Store ONLY the current streamer input
+            this.conversationHistory.push(`STREAMER: ${transcript}`);
+            
             // Check if streamer is addressing a specific chatter
             const addressedChatter = this.findAddressedChatter(transcript);
             
@@ -488,35 +496,39 @@ Question:`
         const prompts = {
             de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
 
-Der Streamer hat dich angesprochen: "${transcript}"
+Der STREAMER (die Person die den Stream macht!) hat DICH direkt angesprochen: "${transcript}"
 
-Antworte casual und direkt (max. 80 Zeichen).
+WICHTIG: Der STREAMER spricht mit DIR, nicht ein anderer Zuschauer!
 
-Sei freundlich und locker in deiner Antwort.
+Antworte casual und direkt (max. 60 Zeichen).
+
+Sei freundlich und locker.
 
 Beispiele:
-- "Ja klar, mach ich!"
+- "Ja klar!"
 - "Danke! Freut mich"
 - "Haha, gute Frage"
-- "Ja genau, das stimmt"
+- "Ja genau!"
 
-Deine Antwort:`,
+Antwort:`,
             
             en: `You are ${chatter.username}, a relaxed Twitch viewer.
 
-The streamer addressed you: "${transcript}"
+The STREAMER (the person doing the stream!) addressed YOU directly: "${transcript}"
 
-Respond casually and directly (max 80 characters).
+IMPORTANT: The STREAMER is talking to YOU, not another viewer!
 
-Be friendly and chill in your response.
+Respond casually and directly (max 60 characters).
+
+Be friendly and chill.
 
 Examples:
-- "Yeah sure, will do!"
+- "Yeah sure!"
 - "Thanks! Appreciate it"
 - "Haha, good question"
-- "Yeah exactly, that's right"
+- "Yeah exactly!"
 
-Your response:`
+Response:`
         };
         
         return prompts[this.language];
@@ -524,36 +536,38 @@ Your response:`
     
     buildResponsePrompt(chatter, transcript) {
         const prompts = {
-            de: `Du bist ${chatter.username}, ein entspannter Twitch-Chatter.
+            de: `Du bist ${chatter.username}, ein entspannter Twitch-Zuschauer.
 
-Der Streamer hat gerade gesagt: "${transcript}"
+Der STREAMER (nicht ein anderer Chatter!) hat gerade gesagt: "${transcript}"
 
-Reagiere casual darauf (max. 80 Zeichen).
+WICHTIG: Das ist der STREAMER der den Stream macht, nicht ein anderer Zuschauer!
 
-Sei locker und freundlich, wie ein normaler Zuschauer.
+Reagiere casual auf das was DER STREAMER gesagt hat (max. 60 Zeichen).
+
+Sei locker und freundlich.
 Manchmal ein Emote verwenden (PogChamp, Kappa, LUL).
 
 Beispiele:
 - "Cool! Mach weiter so"
 - "Interessant, erzähl mehr"
-- "Hab ich auch schon probiert"
 - "Nice! PogChamp"
 
 Nachricht:`,
             
-            en: `You are ${chatter.username}, a relaxed Twitch chatter.
+            en: `You are ${chatter.username}, a relaxed Twitch viewer.
 
-The streamer just said: "${transcript}"
+The STREAMER (not another chatter!) just said: "${transcript}"
 
-React casually to it (max 80 characters).
+IMPORTANT: This is the STREAMER doing the stream, not another viewer!
 
-Be chill and friendly, like a normal viewer.
+React casually to what THE STREAMER said (max 60 characters).
+
+Be chill and friendly.
 Sometimes use an emote (PogChamp, Kappa, LUL).
 
 Examples:
 - "Cool! Keep going"
 - "Interesting, tell more"
-- "I tried that too"
 - "Nice! PogChamp"
 
 Message:`
@@ -587,13 +601,13 @@ Message:`
             timestamp: Date.now()
         };
         
-        // Store messages in history, but limit to prevent loops
-        this.conversationHistory.push(`${chatter.username}: ${text}`);
-        
-        // Keep only last 3 messages for maximum recency
-        if (this.conversationHistory.length > 3) {
-            this.conversationHistory.shift();
+        // ONLY store streamer messages in history
+        // This prevents chatters from looping on their own conversations
+        if (chatter.username === 'Du') {
+            // Clear old history and keep only this streamer message
+            this.conversationHistory = [`STREAMER: ${text}`];
         }
+        // Don't store chatter messages in history at all
         
         if (this.messageCallback) {
             this.messageCallback(message);
